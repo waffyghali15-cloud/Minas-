@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minas Magic Math ✨</title>
+<style>
+/* ========== DESIGN TOKENS ========== */
+:root {
+  --void:       #07050f;
+  --deep:       #0d0920;
+  --mid:        #160d35;
+  --surface:    #1e1245;
+  --card:       #241650;
+  --border:     #3d2580;
+  --gold:       #f0c040;
+  --gold2:      #ffdd80;
+  --gold-glow:  #f0c04044;
+  --teal:       #30e8c8;
+  --teal-dim:   #30e8c822;
+  --rose:       #ff5f8d;
+  --rose-dim:   #ff5f8d22;
+  --purple:     #a855f7;
+  --green:      #34d399;
+  --amber:      #fbbf24;
+  --text:       #e8deff;
+  --muted:      #7b6fa0;
+  --r: 16px;
+  --r2: 24px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: #07050f;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+/* STARFIELD */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background: #0d0920;
+  pointer-events:none;
+}
+.stars {
+  display:none;
+}
+.stars2 {
+  display:none;
+}
+@keyframes twinkle { from{opacity:.3} to{opacity:.7} }
+
+/* ========== HEADER ========== */
+.header {
+  position: sticky; top:0; z-index:100;
+  background: #0d0920;
+  padding: 14px 20px;
+  display: flex; align-items:center; justify-content:space-between;
+  border-bottom: 1px solid #3d258033;
+}
+.brand {
+  display:flex; align-items:center; gap:12px;
+}
+.brand-gem {
+  width:44px; height:44px;
+  background: linear-gradient(135deg, #f0c040, #ff9f43);
+  border-radius: 12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.4rem;
+  box-shadow: 0 0 20px #f0c04066, 0 4px 12px #0008;
+  animation: gemPulse 3s ease-in-out infinite;
+}
+@keyframes gemPulse {
+  0%,100%{ box-shadow: 0 0 20px #f0c04066, 0 4px 12px #0008; }
+  50%{ box-shadow: 0 0 40px #f0c040aa, 0 4px 20px #0008; }
+}
+.brand-text { display:flex; flex-direction:column; }
+.brand-name {
+  font-family:'Segoe UI', Tahoma, Arial, sans-serif;
+  font-size:.85rem; font-weight:900;
+  background: none;
+  color: #f0c040;
+  letter-spacing:.05em;
+}
+.brand-sub { font-size:.7rem; color:var(--muted); margin-top:1px; }
+
+.header-badges { display:flex; gap:8px; }
+.hbadge {
+  display:flex; align-items:center; gap:5px;
+  background: #ffffff0d;
+  border: 1px solid #ffffff15;
+  border-radius:20px; padding:6px 12px;
+  font-size:.85rem; font-weight:700;
+  color: var(--gold);
+}
+
+/* ========== NAV ========== */
+.nav-tabs {
+  display:flex; gap:6px; padding:14px 16px 10px;
+  overflow-x:auto; position:relative; z-index:10;
+}
+.nav-tabs::-webkit-scrollbar { display:none; }
+.ntab {
+  flex-shrink:0;
+  padding:9px 18px; border-radius:50px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif; font-weight:700; font-size:.85rem;
+  cursor:pointer; transition:all .25s;
+  white-space:nowrap;
+}
+.ntab:hover { color:var(--text); border-color:#6640cc; }
+.ntab.active {
+  background: linear-gradient(135deg, #4a21b8, #6d3bdd);
+  border-color: transparent;
+  color:#fff;
+  box-shadow: 0 4px 20px #6d3bdd55;
+}
+
+/* ========== SECTIONS ========== */
+.section { display:none; padding:0 16px 20px; animation:fadeUp .3s ease; position:relative; z-index:5; }
+.section.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ========== SECTION TITLE ========== */
+.stitle {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:1rem; font-weight:700;
+  color:var(--gold2);
+  margin: 20px 0 12px;
+  display:flex; align-items:center; gap:8px;
+  letter-spacing:.05em;
+}
+.stitle::after {
+  content:'';
+  flex:1; height:1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ========== CARDS ========== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding:20px;
+  box-shadow: 0 8px 32px #00000060;
+}
+
+/* ========== HOME ========== */
+.hero {
+  background: linear-gradient(135deg, #2a1065 0%, #4a21b8 50%, #1a0040 100%);
+  border-radius:28px;
+  padding:28px 24px;
+  border: 1px solid #6d3bdd66;
+  box-shadow: 0 20px 60px #4a21b844, inset 0 1px 0 #ffffff15;
+  display:flex; justify-content:space-between; align-items:center;
+  position:relative; overflow:hidden;
+  margin-bottom:16px;
+}
+.hero::before {
+  content:'';
+  position:absolute; top:-60px; left:40%;
+  width:200px; height:200px;
+  background: radial-gradient(circle, #f0c04022 0%, transparent 70%);
+  border-radius:50%;
+}
+.hero-content { flex:1; }
+.hero-title {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:1.3rem; font-weight:900;
+  color: #f0c040;
+  line-height:1.2; margin-bottom:6px;
+}
+.hero-sub { font-size:.9rem; color:rgba(232,222,255,.75); margin-bottom:16px; }
+.btn-primary {
+  display:inline-flex; align-items:center; gap:6px;
+  background: linear-gradient(135deg, #f0c040, #ff9f43);
+  color:#1a0a20; font-family:'Segoe UI',Tahoma,Arial,sans-serif; font-weight:900;
+  font-size:.9rem; padding:11px 22px; border-radius:50px;
+  border:none; cursor:pointer;
+  box-shadow:0 4px 20px #f0c04044;
+  transition:all .2s;
+}
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px #f0c04066; }
+.hero-orb { font-size:4.5rem; animation:float 4s ease-in-out infinite; margin-right:8px; }
+@keyframes float { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-12px) rotate(3deg)} }
+
+.daily-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:4px; }
+.daily-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:18px; padding:16px; text-align:center;
+  position:relative; overflow:hidden;
+}
+.daily-card::before {
+  content:''; position:absolute; top:0; right:0; left:0; height:3px;
+  border-radius:18px 18px 0 0;
+}
+.dc-green::before { background:linear-gradient(90deg,#34d399,#10b981); }
+.dc-amber::before { background:linear-gradient(90deg,#fbbf24,#f59e0b); }
+.daily-num { font-size:2.2rem; font-weight:900; line-height:1; }
+.dc-green .daily-num { color:#34d399; }
+.dc-amber .daily-num { color:#fbbf24; }
+.daily-lbl { font-size:.72rem; color:var(--muted); margin-top:4px; }
+
+/* ========== GAMES ========== */
+.games-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.game-card {
+  border-radius:22px; padding:18px 16px;
+  cursor:pointer; transition:all .3s;
+  border:1px solid transparent;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; gap:6px;
+  min-height:150px;
+}
+.game-card::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.07) 0%, transparent 100%);
+  pointer-events:none;
+}
+.game-card:hover { transform:translateY(-5px) scale(1.02); }
+.game-card:active { transform:scale(.98); }
+.gc1 { background:linear-gradient(135deg,#1e3a8a,#1d4ed8); border-color:#3b82f644; box-shadow:0 12px 40px #1d4ed844; }
+.gc2 { background:linear-gradient(135deg,#065f46,#059669); border-color:#34d39944; box-shadow:0 12px 40px #05966944; }
+.gc3 { background:linear-gradient(135deg,#7c2d12,#ea580c); border-color:#f97316aa; box-shadow:0 12px 40px #ea580c44; }
+.gc4 { background:linear-gradient(135deg,#4c1d95,#7c3aed); border-color:#a855f744; box-shadow:0 12px 40px #7c3aed44; }
+.gc5 { background:linear-gradient(135deg,#831843,#ec4899); border-color:#f472b644; box-shadow:0 12px 40px #ec489944; }
+.gc6 { background:linear-gradient(135deg,#134e4a,#0d9488); border-color:#2dd4bf44; box-shadow:0 12px 40px #0d948844; }
+.gcard-icon { font-size:2.2rem; filter:drop-shadow(0 2px 8px #0008); }
+.gcard-title { font-family:'Segoe UI',Tahoma,Arial,sans-serif; font-weight:900; font-size:1rem; color:#fff; }
+.gcard-desc { font-size:.75rem; color:rgba(255,255,255,.7); }
+.gcard-btn {
+  margin-top:auto;
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff; font-weight:700; font-size:.78rem;
+  padding:6px 14px; border-radius:20px; align-self:flex-start;
+  transition:all .2s;
+}
+.gcard-btn:hover { background:rgba(255,255,255,.25); }
+
+/* ========== GAME ARENA ========== */
+.arena { display:none; margin-top:16px; }
+.arena.active { display:block; animation:fadeUp .35s ease; }
+.arena-shell {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:28px; overflow:hidden;
+  box-shadow:0 20px 60px #00000080;
+}
+.arena-top {
+  background:linear-gradient(135deg, #1e1245, #2a1065);
+  padding:16px 18px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.arena-name {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:.9rem; font-weight:700; color:var(--gold2);
+}
+.arena-stats { display:flex; gap:8px; align-items:center; }
+.astat {
+  background:#ffffff0d; border:1px solid #ffffff15;
+  border-radius:12px; padding:6px 12px;
+  text-align:center;
+}
+.astat-n { font-size:1.1rem; font-weight:900; color:var(--gold); line-height:1; }
+.astat-l { font-size:.62rem; color:var(--muted); }
+.close-btn {
+  background:#ffffff0d; border:1px solid #ff5f8d44;
+  color:#ff5f8d; border-radius:10px; padding:6px 12px;
+  cursor:pointer; font-weight:700; font-size:.8rem;
+  transition:all .2s;
+}
+.close-btn:hover { background:#ff5f8d22; }
+
+/* PROGRESS */
+.prog-wrap { height:5px; background:#ffffff0d; }
+.prog-fill { height:100%; background:linear-gradient(90deg,#a855f7,#f0c040); transition:width .5s cubic-bezier(.4,0,.2,1); }
+
+/* TIMER RING */
+.timer-section { padding:14px 18px 0; display:flex; align-items:center; justify-content:flex-end; gap:8px; }
+.timer-ring-wrap {
+  position:relative; width:50px; height:50px;
+}
+.timer-ring-wrap svg { transform:rotate(-90deg); }
+.timer-bg { fill:none; stroke:#ffffff15; stroke-width:4; }
+.timer-arc { fill:none; stroke:var(--teal); stroke-width:4; stroke-linecap:round; transition:stroke-dashoffset .1s linear; }
+.timer-num {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; font-weight:900; color:var(--teal);
+}
+
+/* QUESTION */
+.q-box {
+  margin:14px 18px;
+  background:linear-gradient(135deg,#2a1065,#4a21b8);
+  border:1px solid #6d3bdd55;
+  border-radius:22px; padding:28px 20px;
+  text-align:center;
+  box-shadow:0 8px 32px #4a21b844, inset 0 1px 0 #ffffff15;
+  position:relative; overflow:hidden;
+}
+.q-box::before {
+  content:'✦';
+  position:absolute; top:10px; right:14px;
+  font-size:1.2rem; color:#f0c04033;
+  animation:spin 8s linear infinite;
+}
+.q-box::after {
+  content:'✦';
+  position:absolute; bottom:10px; left:14px;
+  font-size:.8rem; color:#30e8c833;
+  animation:spin 6s linear infinite reverse;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+.q-text {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:2.4rem; font-weight:900; color:#fff;
+  text-shadow:0 0 30px #a855f799;
+  letter-spacing:.05em;
+}
+.q-hint { font-size:.8rem; color:var(--teal); margin-top:8px; opacity:.85; }
+
+/* ANSWERS */
+.answers-wrap { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 18px 18px; }
+.ans-btn {
+  background:#ffffff08; border:2px solid var(--border);
+  border-radius:18px; padding:18px 10px;
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif; font-size:1.7rem; font-weight:900;
+  color:var(--text); cursor:pointer; transition:all .2s;
+  position:relative; overflow:hidden;
+}
+.ans-btn::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,.03));
+}
+.ans-btn:hover:not(:disabled) {
+  border-color:var(--purple); background:#a855f722;
+  transform:scale(1.04);
+  box-shadow:0 0 20px #a855f744;
+}
+.ans-btn.correct {
+  border-color:var(--green); background:#34d39922;
+  color:var(--green);
+  box-shadow:0 0 30px #34d39966;
+  animation:correctPop .4s ease;
+}
+.ans-btn.wrong {
+  border-color:var(--rose); background:#ff5f8d22;
+  color:var(--rose);
+  box-shadow:0 0 20px #ff5f8d44;
+  animation:shake .35s ease;
+}
+@keyframes correctPop { 0%{transform:scale(1)} 40%{transform:scale(1.15)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+
+/* FEEDBACK */
+.feedback-bar {
+  margin:0 18px 14px;
+  padding:10px 16px; border-radius:14px;
+  font-weight:700; font-size:.9rem; text-align:center;
+  opacity:0; transition:opacity .25s;
+}
+.feedback-bar.show { opacity:1; }
+.fb-correct { background:#34d39922; border:1px solid #34d39944; color:var(--green); }
+.fb-wrong   { background:#ff5f8d22; border:1px solid #ff5f8d44; color:var(--rose); }
+
+/* ========== RULES ========== */
+.rules-group { margin-bottom:20px; }
+.rg-header {
+  display:flex; align-items:center; gap:10px;
+  font-weight:900; font-size:1rem; color:var(--text);
+  margin-bottom:10px;
+}
+.rg-pill {
+  padding:3px 12px; border-radius:20px; font-size:.75rem; font-weight:700;
+}
+.rg-add { background:#34d39922; border:1px solid #34d39944; color:var(--green); }
+.rg-sub { background:#ff5f8d22; border:1px solid #ff5f8d44; color:var(--rose); }
+
+.rule-row {
+  display:flex; align-items:center; gap:12px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:14px 16px;
+  margin-bottom:8px; transition:all .2s;
+}
+.rule-row:hover { border-color:#6d3bdd; transform:translateX(-3px); }
+.rule-formula {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:1rem; font-weight:700; color:var(--gold2);
+  background:#f0c04011; border:1px solid #f0c04033;
+  border-radius:10px; padding:8px 16px; min-width:150px; text-align:center;
+  white-space:nowrap;
+}
+.rule-explain { font-size:.83rem; color:var(--muted); line-height:1.5; }
+
+/* ========== PLAN SECTION ========== */
+.plan-hero {
+  background:linear-gradient(135deg,#1e1245,#2a1065,#160d35);
+  border:1px solid var(--border); border-radius:28px;
+  padding:24px; margin-bottom:16px;
+  box-shadow:0 16px 50px #00000060;
+}
+.plan-hero h2 {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:1.15rem; font-weight:900; color:var(--gold2); margin-bottom:6px;
+}
+.plan-hero p { font-size:.85rem; color:var(--muted); margin-bottom:14px; }
+.plan-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.ptag {
+  background:#ffffff0d; border:1px solid #ffffff15;
+  border-radius:20px; padding:5px 12px; font-size:.75rem; color:var(--text);
+}
+
+.week-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:22px; margin-bottom:12px;
+  overflow:hidden;
+  box-shadow:0 8px 30px #00000050;
+}
+.wk-header {
+  padding:16px 18px;
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; transition:background .2s;
+  user-select:none;
+}
+.wk-header:hover { background:#ffffff06; }
+.wk-label {
+  display:flex; align-items:center; gap:10px;
+  font-weight:700; font-size:.95rem; color:#fff;
+}
+.wk-num {
+  width:32px; height:32px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif; font-size:.8rem; font-weight:700;
+}
+.wn1{background:linear-gradient(135deg,#1d4ed8,#3b82f6);} 
+.wn2{background:linear-gradient(135deg,#059669,#34d399);}
+.wn3{background:linear-gradient(135deg,#d97706,#fbbf24);}
+.wn4{background:linear-gradient(135deg,#7c3aed,#a855f7);}
+.wk-arrow { color:var(--muted); transition:transform .3s; font-size:1.1rem; }
+.wk-header.open .wk-arrow { transform:rotate(180deg); }
+
+.wk-body { display:none; padding:0 16px 16px; }
+.wk-body.open { display:block; }
+
+.lesson-card {
+  background:#ffffff06; border:1px solid #ffffff10;
+  border-radius:18px; padding:16px; margin-bottom:10px;
+}
+.lesson-card:last-child { margin-bottom:0; }
+.lc-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.lc-badge {
+  background:linear-gradient(135deg,#4a21b8,#6d3bdd);
+  border-radius:8px; padding:4px 10px;
+  font-size:.72rem; font-weight:700; color:var(--gold2);
+  white-space:nowrap;
+}
+.lc-title { font-weight:700; font-size:.9rem; color:#fff; }
+
+/* PLAN STEP with timer */
+.plan-step {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 0; border-bottom:1px solid #ffffff08;
+}
+.plan-step:last-child { border-bottom:none; padding-bottom:0; }
+.step-num {
+  width:24px; height:24px; border-radius:8px;
+  background:linear-gradient(135deg,#4a21b8,#a855f7);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.7rem; font-weight:900; color:#fff; flex-shrink:0; margin-top:1px;
+}
+.step-content { flex:1; }
+.step-text { font-size:.82rem; color:var(--text); line-height:1.5; }
+.step-dur { font-size:.7rem; color:var(--muted); margin-top:2px; }
+
+.step-timer-btn {
+  flex-shrink:0;
+  background:var(--teal-dim); border:1px solid #30e8c844;
+  color:var(--teal); border-radius:10px; padding:5px 10px;
+  font-size:.72rem; font-weight:700; cursor:pointer;
+  transition:all .2s; white-space:nowrap;
+  display:flex; align-items:center; gap:4px;
+}
+.step-timer-btn:hover { background:#30e8c833; }
+.step-timer-btn.running { background:#f0c04022; border-color:#f0c04066; color:var(--gold); }
+.step-timer-btn.done { background:#34d39922; border-color:#34d39966; color:var(--green); }
+
+/* FLOATING TIMER */
+.float-timer {
+  position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+  z-index:200; background:#0d0920;
+  border:1px solid var(--border); border-radius:28px; padding:14px 22px;
+  display:flex; align-items:center; gap:14px;
+  box-shadow:0 20px 60px #00000080, 0 0 0 1px #3d258066;
+  min-width:260px; transition:all .3s;
+  opacity:0; pointer-events:none;
+}
+.float-timer.visible { opacity:1; pointer-events:all; }
+.ft-icon { font-size:1.8rem; }
+.ft-info { flex:1; }
+.ft-label { font-size:.8rem; color:var(--muted); }
+.ft-time {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:1.6rem; font-weight:900;
+  color:var(--teal);
+}
+.ft-time.urgent { color:var(--rose); animation:blink .5s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+.ft-stop {
+  background:var(--rose-dim); border:1px solid #ff5f8d44;
+  color:var(--rose); border-radius:12px; padding:7px 14px;
+  cursor:pointer; font-weight:700; font-size:.8rem;
+  transition:all .2s;
+}
+.ft-stop:hover { background:#ff5f8d33; }
+
+/* ========== AWARDS ========== */
+.stars-hero {
+  background:linear-gradient(135deg,#1e1245,#2a1065);
+  border:1px solid #f0c04033; border-radius:28px;
+  padding:28px; text-align:center; margin-bottom:20px;
+  box-shadow:0 0 40px #f0c04011;
+}
+.stars-display { font-size:2.8rem; letter-spacing:4px; margin-bottom:8px; }
+.stars-count {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:2rem; font-weight:900;
+  color: #f0c040;
+}
+.stars-sub { font-size:.85rem; color:var(--muted); margin-top:4px; }
+
+.ach-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.ach-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:18px; padding:16px 10px; text-align:center;
+  transition:all .3s; opacity:.5; filter:grayscale(.5);
+}
+.ach-card.earned {
+  border-color:#f0c04066; background:linear-gradient(135deg,#1e1245,#2a1065);
+  opacity:1; filter:none;
+  box-shadow:0 0 20px #f0c04022;
+}
+.ach-icon { font-size:2rem; }
+.ach-name { font-size:.72rem; font-weight:700; color:var(--text); margin-top:6px; }
+.ach-desc { font-size:.62rem; color:var(--muted); margin-top:2px; }
+
+/* ========== BOTTOM NAV ========== */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background:#0d0920;
+  border-top:1px solid var(--border);
+  display:flex;
+  box-shadow:0 -8px 30px #00000060;
+}
+.bn-item {
+  flex:1; padding:10px 6px 8px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  cursor:pointer; transition:all .2s;
+}
+.bn-icon { font-size:1.3rem; filter:grayscale(.6); transition:all .2s; }
+.bn-label { font-size:.62rem; font-weight:700; color:var(--muted); transition:all .2s; }
+.bn-item.active .bn-icon { filter:none; }
+.bn-item.active .bn-label { color:var(--gold); }
+.bn-item.active { position:relative; }
+.bn-item.active::after {
+  content:''; position:absolute; top:0; left:25%; right:25%; height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  border-radius:0 0 4px 4px;
+}
+
+/* RESULT POPUP */
+.overlay { position:fixed; inset:0; background:#000000cc; z-index:300; display:none; align-items:center; justify-content:center; }
+.overlay.show { display:flex; }
+.popup {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:28px; padding:32px 28px; text-align:center;
+  max-width:320px; width:92%;
+  animation:popIn .4s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow:0 30px 80px #00000099, 0 0 0 1px #3d258066;
+}
+@keyframes popIn { from{transform:scale(.6) rotate(-8deg);opacity:0} to{transform:scale(1) rotate(0);opacity:1} }
+.popup-emoji { font-size:4.5rem; margin-bottom:8px; }
+.popup-title {
+  font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+  font-size:1.5rem; font-weight:900; color:var(--gold2); margin-bottom:8px;
+}
+.popup-score { font-size:.9rem; color:var(--muted); margin-bottom:20px; }
+.popup-stars { font-size:2rem; margin-bottom:16px; letter-spacing:4px; }
+.popup-btn { width:100%; }
+
+/* ========== MISC ========== */
+.divider { height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); margin:8px 0; }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="stars2"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">
+    <div class="brand-gem">✨</div>
+    <div class="brand-text">
+      <div class="brand-name">Minas Magic Math</div>
+      <div class="brand-sub">رحلة الأرقام السحرية</div>
+    </div>
+  </div>
+  <div class="header-badges">
+    <div class="hbadge">⭐ <span id="hStars">0</span></div>
+    <div class="hbadge">🏆 <span id="hLevel">1</span></div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <div class="ntab active" onclick="go('home')">🏠 الرئيسية</div>
+  <div class="ntab" onclick="go('games')">🎮 الألعاب</div>
+  <div class="ntab" onclick="go('rules')">📚 القواعد</div>
+  <div class="ntab" onclick="go('plan')">📅 الخطة</div>
+  <div class="ntab" onclick="go('awards')">🏆 الجوائز</div>
+</div>
+
+<!-- ===================== HOME ===================== -->
+<div class="section active" id="sec-home">
+
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-title">أهلاً بك في<br>عالم السحر!</div>
+      <div class="hero-sub">الأرقام تنتظرك — ابدأ المغامرة 🚀</div>
+      <button class="btn-primary" onclick="go('games')">🎮 العب الآن</button>
+    </div>
+    <div class="hero-orb">🦁</div>
+  </div>
+
+  <div class="stitle">⚡ إحصائياتي اليومية</div>
+  <div class="daily-grid">
+    <div class="daily-card dc-green">
+      <div class="daily-num" id="hCorrect">0</div>
+      <div class="daily-lbl">إجابات صحيحة اليوم</div>
+    </div>
+    <div class="daily-card dc-amber">
+      <div class="daily-num">🔥1</div>
+      <div class="daily-lbl">أيام متتالية</div>
+    </div>
+  </div>
+
+  <div class="stitle">🎯 اللعبة المقترحة</div>
+  <div class="game-card gc5" onclick="startGame('friends')" style="grid-column:unset; margin-bottom:10px;">
+    <div class="gcard-icon">👫</div>
+    <div class="gcard-title">أصدقاء الجمع مع 5</div>
+    <div class="gcard-desc">تعلّم قواعد الصديق 5 بطريقة ممتعة وتفاعلية</div>
+    <div class="gcard-btn">ابدأ الآن ←</div>
+  </div>
+
+</div>
+
+<!-- ===================== GAMES ===================== -->
+<div class="section" id="sec-games">
+  <div class="games-grid">
+    <div class="game-card gc1" onclick="startGame('friends')">
+      <div class="gcard-icon">👫</div>
+      <div class="gcard-title">أصدقاء 5</div>
+      <div class="gcard-desc">الجمع مع الصديق 5</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+    <div class="game-card gc2" onclick="startGame('friends10')">
+      <div class="gcard-icon">🔟</div>
+      <div class="gcard-title">أصدقاء 10</div>
+      <div class="gcard-desc">الجمع مع الصديق 10</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+    <div class="game-card gc3" onclick="startGame('speed')">
+      <div class="gcard-icon">⚡</div>
+      <div class="gcard-title">سرعة الحساب</div>
+      <div class="gcard-desc">أجب قبل انتهاء الوقت!</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+    <div class="game-card gc4" onclick="startGame('missing')">
+      <div class="gcard-icon">❓</div>
+      <div class="gcard-title">الرقم المختفي</div>
+      <div class="gcard-desc">اكتشف الرقم الناقص</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+    <div class="game-card gc5" onclick="startGame('balloon')">
+      <div class="gcard-icon">🎈</div>
+      <div class="gcard-title">البالونات</div>
+      <div class="gcard-desc">اختر البالون الصحيح</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+    <div class="game-card gc6" onclick="startGame('match')">
+      <div class="gcard-icon">🔗</div>
+      <div class="gcard-title">المطابقة</div>
+      <div class="gcard-desc">طابق القاعدة بالجواب</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+  </div>
+
+  <!-- ARENA -->
+  <div class="arena" id="arena">
+    <div class="arena-shell">
+      <div class="arena-top">
+        <div class="arena-name" id="arenaName">🎮 اللعبة</div>
+        <div class="arena-stats">
+          <div class="astat"><div class="astat-n" id="aScore">0</div><div class="astat-l">نقاط</div></div>
+          <div class="astat"><div class="astat-n" id="aQ">0/10</div><div class="astat-l">سؤال</div></div>
+          <button class="close-btn" onclick="closeArena()">✕ إغلاق</button>
+        </div>
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+      <div class="timer-section">
+        <span style="font-size:.75rem;color:var(--muted);">الوقت المتبقي</span>
+        <div class="timer-ring-wrap">
+          <svg width="50" height="50" viewBox="0 0 50 50">
+            <circle class="timer-bg" cx="25" cy="25" r="20"/>
+            <circle class="timer-arc" id="timerArc" cx="25" cy="25" r="20"
+              stroke-dasharray="125.66" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-num" id="timerNum">15</div>
+        </div>
+      </div>
+
+      <div class="q-box">
+        <div class="q-text" id="qText">جاهز؟</div>
+        <div class="q-hint" id="qHint">✦</div>
+      </div>
+
+      <div class="feedback-bar" id="feedbackBar"></div>
+
+      <div class="answers-wrap" id="answersWrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== RULES ===================== -->
+<div class="section" id="sec-rules">
+
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-add">جمع</span> أصدقاء 5 — الجمع</div>
+    <div class="rule-row"><div class="rule-formula">+4 = +5 − 1</div><div class="rule-explain">لجمع 4: أضف 5 ثم اطرح 1</div></div>
+    <div class="rule-row"><div class="rule-formula">+3 = +5 − 2</div><div class="rule-explain">لجمع 3: أضف 5 ثم اطرح 2</div></div>
+    <div class="rule-row"><div class="rule-formula">+2 = +5 − 3</div><div class="rule-explain">لجمع 2: أضف 5 ثم اطرح 3</div></div>
+    <div class="rule-row"><div class="rule-formula">+1 = +5 − 4</div><div class="rule-explain">لجمع 1: أضف 5 ثم اطرح 4</div></div>
+  </div>
+
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-sub">طرح</span> أصدقاء 5 — الطرح</div>
+    <div class="rule-row"><div class="rule-formula">−4 = −5 + 1</div><div class="rule-explain">لطرح 4: اطرح 5 ثم أضف 1</div></div>
+    <div class="rule-row"><div class="rule-formula">−3 = −5 + 2</div><div class="rule-explain">لطرح 3: اطرح 5 ثم أضف 2</div></div>
+    <div class="rule-row"><div class="rule-formula">−2 = −5 + 3</div><div class="rule-explain">لطرح 2: اطرح 5 ثم أضف 3</div></div>
+    <div class="rule-row"><div class="rule-formula">−1 = −5 + 4</div><div class="rule-explain">لطرح 1: اطرح 5 ثم أضف 4</div></div>
+  </div>
+
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-add">جمع</span> أصدقاء 10 — الجمع</div>
+    <div class="rule-row"><div class="rule-formula">+9 = +10 − 1</div><div class="rule-explain">لجمع 9: أضف 10 ثم اطرح 1</div></div>
+    <div class="rule-row"><div class="rule-formula">+8 = +10 − 2</div><div class="rule-explain">لجمع 8: أضف 10 ثم اطرح 2</div></div>
+    <div class="rule-row"><div class="rule-formula">+7 = +10 − 3</div><div class="rule-explain">لجمع 7: أضف 10 ثم اطرح 3</div></div>
+    <div class="rule-row"><div class="rule-formula">+6 = +10 − 4</div><div class="rule-explain">لجمع 6: أضف 10 ثم اطرح 4</div></div>
+  </div>
+
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-sub">طرح</span> أصدقاء 10 — الطرح</div>
+    <div class="rule-row"><div class="rule-formula">−9 = −10 + 1</div><div class="rule-explain">لطرح 9: اطرح 10 ثم أضف 1</div></div>
+    <div class="rule-row"><div class="rule-formula">−8 = −10 + 2</div><div class="rule-explain">لطرح 8: اطرح 10 ثم أضف 2</div></div>
+    <div class="rule-row"><div class="rule-formula">−7 = −10 + 3</div><div class="rule-explain">لطرح 7: اطرح 10 ثم أضف 3</div></div>
+    <div class="rule-row"><div class="rule-formula">−6 = −10 + 4</div><div class="rule-explain">لطرح 6: اطرح 10 ثم أضف 4</div></div>
+  </div>
+
+</div>
+
+<!-- ===================== PLAN ===================== -->
+<div class="section" id="sec-plan">
+  <div class="plan-hero">
+    <h2>📅 الخطة التدريسية الشهرية</h2>
+    <p>12 درساً · 4 أسابيع · 3 ساعات أسبوعياً</p>
+    <div class="plan-tags">
+      <span class="ptag">📖 54 صفحة تمارين</span>
+      <span class="ptag">🎮 3 دروس أسبوعياً</span>
+      <span class="ptag">⏱️ 60 دقيقة للدرس</span>
+    </div>
+  </div>
+
+  <!-- WEEK 1 -->
+  <div class="week-card">
+    <div class="wk-header open" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn1">١</div><span>الأسبوع الأول: أصدقاء الجمع مع 5 — ص 1–14</span></div>
+      <div class="wk-arrow">▾</div>
+    </div>
+    <div class="wk-body open">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 1</div><div class="lc-title">مقدمة: من هو الصديق 5؟</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎵 أغنية الترحيب والجو الحماسي</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'🎵 أغنية الترحيب')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🎴 قصة "بطل الأرقام" ومعرفة صديق 5</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎴 قصة بطل الأرقام')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🖐️ نشاط الأصابع: اعرف 4+1=5</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🖐️ نشاط الأصابع')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🎮 لعبة البطاقات على الأرض</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎮 لعبة البطاقات')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">5</div><div class="step-content"><div class="step-text">📝 تمارين الكتاب ص 1–4</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'📝 تمارين ص 1-4')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">6</div><div class="step-content"><div class="step-text">⭐ جائزة النجوم والتحفيز</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'⭐ جائزة النجوم')">⏱ ابدأ</button></div>
+      </div>
+
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 2</div><div class="lc-title">قواعد +4=+5−1 و +3=+5−2</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🔁 مراجعة الدرس السابق بأسئلة سريعة</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'🔁 مراجعة سريعة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🧮 شرح القاعدة بالأحجار الملونة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🧮 شرح بالأحجار')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🎲 لعبة النرد: رمي وتطبيق</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎲 لعبة النرد')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">📝 تمارين ص 5–9</div><div class="step-dur">20 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,20,'📝 تمارين ص 5-9')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">5</div><div class="step-content"><div class="step-text">🏆 مسابقة من يحل أكثر</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🏆 مسابقة الحل')">⏱ ابدأ</button></div>
+      </div>
+
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 3</div><div class="lc-title">قواعد +2=+5−3 و +1=+5−4 + مراجعة</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎵 أغنية القواعد الأربع</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎵 أغنية القواعد')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🃏 لعبة بطاقات الومضة (Flash Cards)</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🃏 Flash Cards')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 10–14</div><div class="step-dur">20 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,20,'📝 تمارين ص 10-14')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🎮 لعبة تفاعلية على التطبيق</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎮 لعبة تفاعلية')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">5</div><div class="step-content"><div class="step-text">⭐ تقييم أسبوعي ومنح الشارات</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'⭐ تقييم أسبوعي')">⏱ ابدأ</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="week-card">
+    <div class="wk-header" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn2">٢</div><span>الأسبوع الثاني: أصدقاء الطرح مع 5 — ص 15–27</span></div>
+      <div class="wk-arrow">▾</div>
+    </div>
+    <div class="wk-body">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 4</div><div class="lc-title">الصديق 5 في الطرح: −4=−5+1</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🔗 ربط الجمع بالطرح "الأصدقاء يتبادلون"</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🔗 ربط الجمع بالطرح')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🎭 تمثيل دور: "أعطني 5 وخذ 1 ارجع"</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎭 تمثيل الدور')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 15–19</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 15-19')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">⭐ تحدي الدقيقة الواحدة</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'⭐ تحدي الدقيقة')">⏱ ابدأ</button></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 5</div><div class="lc-title">قواعد −3=−5+2 و −2=−5+3</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎯 لعبة الهدف: ارمي واحسب</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎯 لعبة الهدف')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🧩 أحجية الأرقام المفقودة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🧩 أحجية الأرقام')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 20–23</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 20-23')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🎵 أغنية الطرح ورقصة الأرقام</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎵 أغنية الطرح')">⏱ ابدأ</button></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 6</div><div class="lc-title">−1=−5+4 + مراجعة جميع قواعد 5</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">📋 لوحة "أصدقاء 5 الكاملة" تلوين جماعي</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'📋 تلوين جماعي')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🏃 لعبة الحركة: وقف/اجلس مع الإجابة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🏃 لعبة الحركة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 24–27</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 24-27')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🏆 شارة "خبير الـ5" + تقييم</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🏆 شارة خبير الـ5')">⏱ ابدأ</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="week-card">
+    <div class="wk-header" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn3">٣</div><span>الأسبوع الثالث: أصدقاء الجمع مع 10 — ص 28–41</span></div>
+      <div class="wk-arrow">▾</div>
+    </div>
+    <div class="wk-body">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 7</div><div class="lc-title">مقدمة: الصديق الكبير 10</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎪 احتفال "استقبال 10" مع موسيقى وهتافات</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'🎪 احتفال استقبال 10')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">📊 مخطط مقارنة 5 و10 على السبورة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'📊 مخطط المقارنة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🎮 لعبة تفاعلية للصديق 10</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎮 لعبة الصديق 10')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">📝 تمارين ص 28–32</div><div class="step-dur">20 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,20,'📝 تمارين ص 28-32')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">5</div><div class="step-content"><div class="step-text">⭐ تحفيز ومراجعة سريعة</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'⭐ تحفيز ومراجعة')">⏱ ابدأ</button></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 8</div><div class="lc-title">قواعد +8=+10−2 و +7=+10−3</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">⚡ تحدي الومضة: 10 أسئلة في دقيقتين</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'⚡ تحدي الومضة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🎨 رسم قواعد الـ10 بالألوان</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎨 رسم القواعد')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 33–37</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 33-37')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🎵 ترديد القواعد بإيقاع موسيقي</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎵 ترديد القواعد')">⏱ ابدأ</button></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 9</div><div class="lc-title">+6=+10−4 + مراجعة جمع الـ10</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎲 لعبة "من يصل أول؟" على رقعة الحساب</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎲 من يصل أول؟')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">📝 تمارين ص 38–41</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 38-41')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🔁 مراجعة شاملة 5 و10 جمع</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🔁 مراجعة شاملة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">⭐ جائزة "بطل الجمع"</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'⭐ بطل الجمع')">⏱ ابدأ</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 4 -->
+  <div class="week-card">
+    <div class="wk-header" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn4">٤</div><span>الأسبوع الرابع: الطرح مع 10 + مراجعة شاملة — ص 42–54</span></div>
+      <div class="wk-arrow">▾</div>
+    </div>
+    <div class="wk-body">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 10</div><div class="lc-title">−9=−10+1 و −8=−10+2</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🔗 الربط بين الجمع والطرح لـ10</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🔗 ربط الجمع والطرح')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🎭 لعبة دور المعلم: الطفل يشرح للآخرين</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎭 دور المعلم')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 42–46</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 42-46')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🎵 أغنية أصدقاء 10</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎵 أغنية أصدقاء 10')">⏱ ابدأ</button></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 11</div><div class="lc-title">قواعد −7=−10+3 و −6=−10+4</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">⚡ سباق الحساب الذهني</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'⚡ سباق الحساب')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🧩 حل ألغاز الأرقام المفقودة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🧩 ألغاز الأرقام')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 47–50</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 47-50')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">⭐ تقييم ذاتي + تصحيح جماعي</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'⭐ تقييم ذاتي')">⏱ ابدأ</button></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 12</div><div class="lc-title">🎉 المراجعة الشاملة واختبار نهاية الكورس</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎪 حفل استعراض: كل طفل يشرح قاعدة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎪 حفل الاستعراض')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">📝 تمارين ص 51–54 (الختامية)</div><div class="step-dur">20 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,20,'📝 تمارين ختامية')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🎮 بطولة الحساب الذهني النهائية</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎮 البطولة النهائية')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🏆 حفل التخرج + توزيع الشهادات والجوائز</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🏆 حفل التخرج')">⏱ ابدأ</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AWARDS ===================== -->
+<div class="section" id="sec-awards">
+  <div class="stars-hero">
+    <div class="stars-display" id="starsRow">☆☆☆☆☆</div>
+    <div class="stars-count" id="starsCount">0 نجمة</div>
+    <div class="stars-sub">العب وتحدّى نفسك لتجمع المزيد!</div>
+  </div>
+  <div class="stitle">🏅 إنجازاتي</div>
+  <div class="ach-grid">
+    <div class="ach-card earned" id="ach1"><div class="ach-icon">🌟</div><div class="ach-name">المبتدئ</div><div class="ach-desc">أول لعبة</div></div>
+    <div class="ach-card" id="ach2"><div class="ach-icon">⚡</div><div class="ach-name">السريع</div><div class="ach-desc">10 نجوم</div></div>
+    <div class="ach-card" id="ach3"><div class="ach-icon">🔥</div><div class="ach-name">المتحمس</div><div class="ach-desc">25 نجمة</div></div>
+    <div class="ach-card" id="ach4"><div class="ach-icon">👑</div><div class="ach-name">البطل</div><div class="ach-desc">50 نجمة</div></div>
+    <div class="ach-card" id="ach5"><div class="ach-icon">🎓</div><div class="ach-name">العبقري</div><div class="ach-desc">100 نجمة</div></div>
+    <div class="ach-card" id="ach6"><div class="ach-icon">🦁</div><div class="ach-name">الأسد</div><div class="ach-desc">كل الألعاب</div></div>
+  </div>
+</div>
+
+<!-- FLOATING PLAN TIMER -->
+<div class="float-timer" id="floatTimer">
+  <div class="ft-icon" id="ftIcon">⏱</div>
+  <div class="ft-info">
+    <div class="ft-label" id="ftLabel">جارٍ العدّ</div>
+    <div class="ft-time" id="ftTime">00:00</div>
+  </div>
+  <button class="ft-stop" onclick="stopPlanTimer()">✕ إيقاف</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="bn-item active" onclick="go('home')"><div class="bn-icon">🏠</div><div class="bn-label">الرئيسية</div></div>
+  <div class="bn-item" onclick="go('games')"><div class="bn-icon">🎮</div><div class="bn-label">الألعاب</div></div>
+  <div class="bn-item" onclick="go('rules')"><div class="bn-icon">📚</div><div class="bn-label">القواعد</div></div>
+  <div class="bn-item" onclick="go('plan')"><div class="bn-icon">📅</div><div class="bn-label">الخطة</div></div>
+  <div class="bn-item" onclick="go('awards')"><div class="bn-icon">🏆</div><div class="bn-label">الجوائز</div></div>
+</div>
+
+<!-- POPUP -->
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <div class="popup-emoji" id="popEmoji">🎉</div>
+    <div class="popup-stars" id="popStars">⭐⭐⭐</div>
+    <div class="popup-title" id="popTitle">رائع!</div>
+    <div class="popup-score" id="popScore">حصلت على 0 نقطة</div>
+    <button class="btn-primary popup-btn" onclick="closePopup()">🎮 العب مجدداً</button>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let totalStars = 0, correctToday = 0;
+let gameScore = 0, gameQ = 0, totalQ = 10;
+let currGame = '', currAns = 0;
+let questionTimer = null, questionSec = 15;
+let gamesPlayed = new Set();
+
+// Plan timer
+let planTimerInterval = null;
+let planTimerSec = 0;
+let planTimerLabel = '';
+let planActiveBtn = null;
+
+// ===== NAVIGATION =====
+const sectionIds = ['home','games','rules','plan','awards'];
+function go(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.ntab').forEach((t,i) => t.classList.toggle('active', sectionIds[i] === id));
+  document.querySelectorAll('.bn-item').forEach((n,i) => n.classList.toggle('active', sectionIds[i] === id));
+  if(id !== 'games') closeArena();
+}
+
+// ===== WEEK TOGGLE =====
+function toggleWk(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+// ===== GAME CONFIGS =====
+const GAMES = {
+  friends: {
+    title:'👫 أصدقاء الجمع مع 5', time:15,
+    gen() {
+      const pairs=[[1,4],[2,3],[3,2],[4,1]];
+      const [a,sub]=pairs[~~(Math.random()*4)];
+      const base=~~(Math.random()*5)+1;
+      return{text:`${base} + ${a} = ?`, hint:`تلميح: +${a} = +5 − ${sub}`, ans:base+a};
+    }
+  },
+  friends10: {
+    title:'🔟 أصدقاء الجمع مع 10', time:15,
+    gen() {
+      const pairs=[[6,4],[7,3],[8,2],[9,1]];
+      const [a,sub]=pairs[~~(Math.random()*4)];
+      const base=~~(Math.random()*5)+1;
+      return{text:`${base} + ${a} = ?`, hint:`تلميح: +${a} = +10 − ${sub}`, ans:base+a};
+    }
+  },
+  speed: {
+    title:'⚡ سرعة الحساب', time:10,
+    gen() {
+      const op=Math.random()<.5?'+':'-';
+      const a=~~(Math.random()*8)+2;
+      const b=op==='-'?~~(Math.random()*(a-1))+1:~~(Math.random()*8)+1;
+      return{text:`${a} ${op} ${b} = ?`, hint:'فكر بسرعة! ⚡', ans:op==='+'?a+b:a-b};
+    }
+  },
+  missing: {
+    title:'❓ الرقم المختفي', time:20,
+    gen() {
+      const a=~~(Math.random()*6)+2;
+      const b=~~(Math.random()*4)+1;
+      const ans=a+b;
+      if(Math.random()<.5) return{text:`${a} + ❓ = ${ans}`, hint:'ما هو الرقم الناقص؟', ans:b};
+      else return{text:`❓ + ${b} = ${ans}`, hint:'ما هو الرقم الناقص؟', ans:a};
+    }
+  },
+  balloon: {
+    title:'🎈 اختر البالون الصحيح', time:15,
+    gen() {
+      const a=~~(Math.random()*5)+1;
+      const add=[1,2,3,4][~~(Math.random()*4)];
+      return{text:`${a} + ${add} = ?`, hint:`استخدم قاعدة الصديق 5 ✦`, ans:a+add};
+    }
+  },
+  match: {
+    title:'🔗 المطابقة السريعة', time:12,
+    gen() {
+      const rules=[
+        {t:'+4 = +5 − ❓',a:1},{t:'+3 = +5 − ❓',a:2},
+        {t:'+2 = +5 − ❓',a:3},{t:'+1 = +5 − ❓',a:4},
+        {t:'−4 = −5 + ❓',a:1},{t:'−3 = −5 + ❓',a:2},
+        {t:'+9 = +10 − ❓',a:1},{t:'+8 = +10 − ❓',a:2},
+        {t:'+7 = +10 − ❓',a:3},{t:'+6 = +10 − ❓',a:4},
+      ];
+      const r=rules[~~(Math.random()*rules.length)];
+      return{text:r.t, hint:'أكمل القاعدة السحرية', ans:r.a};
+    }
+  }
+};
+
+// ===== START GAME =====
+function startGame(type) {
+  currGame = type; gameScore = 0; gameQ = 0;
+  const cfg = GAMES[type];
+  document.getElementById('arenaName').textContent = cfg.title;
+  document.getElementById('aScore').textContent = '0';
+  document.getElementById('aQ').textContent = '0/' + totalQ;
+  document.getElementById('progFill').style.width = '0%';
+  const arena = document.getElementById('arena');
+  arena.classList.add('active');
+  setTimeout(() => arena.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+  gamesPlayed.add(type);
+  nextQ();
+}
+
+function closeArena() {
+  clearQuestionTimer();
+  document.getElementById('arena').classList.remove('active');
+  currGame = '';
+}
+
+function nextQ() {
+  if(gameQ >= totalQ) { endGame(); return; }
+  gameQ++;
+  clearQuestionTimer();
+  const cfg = GAMES[currGame];
+  const q = cfg.gen();
+  currAns = q.ans;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('qHint').textContent = '✦ ' + q.hint;
+  document.getElementById('aQ').textContent = gameQ + '/' + totalQ;
+  document.getElementById('progFill').style.width = (gameQ / totalQ * 100) + '%';
+  hideFeedback();
+  renderAnswers(q.ans);
+  startQuestionTimer(cfg.time || 15);
+}
+
+function renderAnswers(correct) {
+  const wrap = document.getElementById('answersWrap');
+  wrap.innerHTML = '';
+  const opts = new Set([correct]);
+  let attempts = 0;
+  while(opts.size < 4 && attempts < 50) {
+    const w = Math.max(0, correct + ~~(Math.random()*7) - 3);
+    if(w !== correct) opts.add(w);
+    attempts++;
+  }
+  [...opts].sort(() => Math.random() - .5).forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.textContent = opt;
+    btn.onclick = () => checkAns(opt, btn);
+    wrap.appendChild(btn);
+  });
+}
+
+function checkAns(val, btn) {
+  clearQuestionTimer();
+  document.querySelectorAll('.ans-btn').forEach(b => b.onclick = null);
+  const correct = val === currAns;
+  if(correct) {
+    btn.classList.add('correct');
+    gameScore += 10; totalStars++; correctToday++;
+    document.getElementById('aScore').textContent = gameScore;
+    document.getElementById('hStars').textContent = totalStars;
+    document.getElementById('hLevel').textContent = Math.floor(totalStars / 10) + 1;
+    document.getElementById('hCorrect').textContent = correctToday;
+    updateStars(); updateAchs();
+    showFeedback(true);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.ans-btn').forEach(b => {
+      if(+b.textContent === currAns) b.classList.add('correct');
+    });
+    showFeedback(false);
+  }
+  setTimeout(nextQ, 1400);
+}
+
+function showFeedback(ok) {
+  const bar = document.getElementById('feedbackBar');
+  bar.textContent = ok ? '✦ ممتاز! إجابة صحيحة!' : `✦ الإجابة الصحيحة: ${currAns}`;
+  bar.className = 'feedback-bar show ' + (ok ? 'fb-correct' : 'fb-wrong');
+}
+function hideFeedback() {
+  document.getElementById('feedbackBar').className = 'feedback-bar';
+}
+
+// QUESTION TIMER
+function startQuestionTimer(secs) {
+  questionSec = secs;
+  const arc = document.getElementById('timerArc');
+  const num = document.getElementById('timerNum');
+  const circum = 125.66;
+  const updateArc = () => {
+    const ratio = questionSec / secs;
+    arc.style.strokeDashoffset = circum * (1 - ratio);
+    arc.style.stroke = questionSec <= 5 ? '#ff5f8d' : '#30e8c8';
+    num.textContent = questionSec;
+    num.style.color = questionSec <= 5 ? '#ff5f8d' : '#30e8c8';
+  };
+  updateArc();
+  questionTimer = setInterval(() => {
+    questionSec--;
+    updateArc();
+    if(questionSec <= 0) {
+      clearQuestionTimer();
+      document.querySelectorAll('.ans-btn').forEach(b => b.onclick = null);
+      document.querySelectorAll('.ans-btn').forEach(b => {
+        if(+b.textContent === currAns) b.classList.add('correct');
+      });
+      showFeedback(false);
+      setTimeout(nextQ, 1400);
+    }
+  }, 1000);
+}
+function clearQuestionTimer() {
+  clearInterval(questionTimer); questionTimer = null;
+}
+
+function endGame() {
+  const pct = gameScore / (totalQ * 10);
+  const emoji = pct >= .8 ? '🏆' : pct >= .5 ? '⭐' : '👍';
+  const title = pct >= .8 ? 'ممتاز! أنت بطل!' : pct >= .5 ? 'جيد جداً! استمر!' : 'حاول مجدداً!';
+  const starsCount = pct >= .8 ? '⭐⭐⭐' : pct >= .5 ? '⭐⭐' : '⭐';
+  document.getElementById('popEmoji').textContent = emoji;
+  document.getElementById('popTitle').textContent = title;
+  document.getElementById('popStars').textContent = starsCount;
+  document.getElementById('popScore').textContent = `حصلت على ${gameScore} نقطة من ${totalQ*10}`;
+  document.getElementById('overlay').classList.add('show');
+  if(gamesPlayed.size === 6) document.getElementById('ach6').classList.add('earned');
+}
+function closePopup() {
+  document.getElementById('overlay').classList.remove('show');
+  closeArena();
+}
+
+// ===== STARS & ACHIEVEMENTS =====
+function updateStars() {
+  const s = Math.min(totalStars, 5);
+  document.getElementById('starsRow').textContent = '⭐'.repeat(s) + '☆'.repeat(5-s);
+  document.getElementById('starsCount').textContent = totalStars + ' نجمة';
+}
+function updateAchs() {
+  if(totalStars>=1)  document.getElementById('ach1').classList.add('earned');
+  if(totalStars>=10) document.getElementById('ach2').classList.add('earned');
+  if(totalStars>=25) document.getElementById('ach3').classList.add('earned');
+  if(totalStars>=50) document.getElementById('ach4').classList.add('earned');
+  if(totalStars>=100)document.getElementById('ach5').classList.add('earned');
+}
+
+// ===== PLAN TIMER =====
+function startPlanTimer(btn, minutes, label) {
+  // Stop existing
+  if(planTimerInterval) stopPlanTimer();
+
+  planTimerLabel = label;
+  planTimerSec = minutes * 60;
+  planActiveBtn = btn;
+  btn.classList.add('running');
+  btn.innerHTML = '⏸ جارٍ';
+
+  // Show float timer
+  document.getElementById('floatTimer').classList.add('visible');
+  document.getElementById('ftLabel').textContent = label;
+  document.getElementById('ftIcon').textContent = getStepIcon(label);
+
+  updatePlanTimerDisplay();
+  planTimerInterval = setInterval(() => {
+    planTimerSec--;
+    updatePlanTimerDisplay();
+    if(planTimerSec <= 0) {
+      donePlanTimer();
+    }
+  }, 1000);
+}
+
+function updatePlanTimerDisplay() {
+  const m = Math.floor(planTimerSec / 60);
+  const s = planTimerSec % 60;
+  const str = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById('ftTime').textContent = str;
+  document.getElementById('ftTime').className = 'ft-time' + (planTimerSec <= 30 ? ' urgent' : '');
+}
+
+function donePlanTimer() {
+  clearInterval(planTimerInterval); planTimerInterval = null;
+  if(planActiveBtn) {
+    planActiveBtn.classList.remove('running');
+    planActiveBtn.classList.add('done');
+    planActiveBtn.innerHTML = '✓ انتهى';
+  }
+  document.getElementById('ftTime').textContent = '✓ انتهت!';
+  document.getElementById('ftTime').className = 'ft-time';
+  // Vibrate if supported
+  if(navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300]);
+  // Auto-hide after 3s
+  setTimeout(() => {
+    document.getElementById('floatTimer').classList.remove('visible');
+  }, 3000);
+}
+
+function stopPlanTimer() {
+  clearInterval(planTimerInterval); planTimerInterval = null;
+  if(planActiveBtn) {
+    planActiveBtn.classList.remove('running');
+    planActiveBtn.innerHTML = '⏱ ابدأ';
+    planActiveBtn = null;
+  }
+  document.getElementById('floatTimer').classList.remove('visible');
+}
+
+function getStepIcon(label) {
+  if(label.includes('أغنية') || label.includes('ترديد')) return '🎵';
+  if(label.includes('تمارين')) return '📝';
+  if(label.includes('لعبة')) return '🎮';
+  if(label.includes('جائزة') || label.includes('شارة') || label.includes('بطل')) return '⭐';
+  if(label.includes('تحفيز') || label.includes('تقييم')) return '🌟';
+  return '⏱';
+}
+</script>
+</body>
+</html>
