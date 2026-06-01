@@ -1,129 +1,1662 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0a0618" />
-  <title>ميناس ماجيك ماث ✨</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Minas Magic Math ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== DESIGN TOKENS ===== */
+:root {
+  --void:      #04030a;
+  --deep:      #080614;
+  --mid:       #0f0a24;
+  --surface:   #17103a;
+  --card:      #1e1548;
+  --border:    #3a2278;
+  --gold:      #ffd23f;
+  --gold2:     #ffe880;
+  --gold-glow: rgba(255,210,63,.25);
+  --teal:      #00f5d4;
+  --rose:      #ff4d7d;
+  --purple:    #b87fff;
+  --blue:      #4d9fff;
+  --green:     #00e676;
+  --amber:     #ffb300;
+  --text:      #ede8ff;
+  --muted:     #7060aa;
+  --r:16px; --r2:24px;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body {
+  font-family:'Cairo',sans-serif;
+  background:var(--void);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  padding-bottom:80px;
+}
+
+/* ===== ANIMATED BACKGROUND ===== */
+.bg-canvas {
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.nebula {
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;
+  animation:nebulaDrift 20s ease-in-out infinite alternate;
+}
+.n1{width:600px;height:600px;background:radial-gradient(circle,#6a00ff,transparent);top:-100px;left:-150px;}
+.n2{width:500px;height:500px;background:radial-gradient(circle,#0033ff,transparent);top:200px;right:-150px;animation-delay:-7s;}
+.n3{width:400px;height:400px;background:radial-gradient(circle,#ff006e,transparent);bottom:-50px;left:20%;animation-delay:-14s;}
+@keyframes nebulaDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(40px,30px) scale(1.1)}}
+
+.star-field {
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+}
+
+/* ===== HEADER ===== */
+.header {
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(180deg,rgba(8,6,20,.98) 0%,rgba(8,6,20,.9) 100%);
+  padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(58,34,120,.6);
+  backdrop-filter:blur(20px);
+}
+.brand { display:flex;align-items:center;gap:12px; }
+.brand-gem {
+  width:46px;height:46px;
+  background:linear-gradient(135deg,#ffd23f 0%,#ff8c00 100%);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;
+  box-shadow:0 0 24px rgba(255,210,63,.5),0 4px 16px #0009;
+  animation:gemPulse 3s ease-in-out infinite;
+  position:relative;
+}
+.brand-gem::after {
+  content:'';position:absolute;inset:-2px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(255,255,255,.3),transparent);
+  pointer-events:none;
+}
+@keyframes gemPulse{0%,100%{box-shadow:0 0 24px rgba(255,210,63,.5),0 4px 16px #0009}50%{box-shadow:0 0 48px rgba(255,210,63,.8),0 4px 24px #0009}}
+.brand-name {
+  font-family:'Orbitron',sans-serif;
+  font-size:.82rem;font-weight:900;
+  background:linear-gradient(90deg,#ffd23f,#ffe880,#ffd23f);
+  background-size:200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmer 3s linear infinite;
+  letter-spacing:.08em;
+}
+@keyframes shimmer{to{background-position:-200%}}
+.brand-sub{font-size:.68rem;color:var(--muted);margin-top:2px;}
+.header-badges{display:flex;gap:8px;}
+.hbadge {
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:6px 12px;
+  font-size:.85rem;font-weight:700;color:var(--gold);
+  backdrop-filter:blur(10px);
+}
+
+/* ===== NAV ===== */
+.nav-tabs {
+  display:flex;gap:6px;padding:12px 14px 10px;
+  overflow-x:auto;position:relative;z-index:10;
+}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.ntab {
+  flex-shrink:0;padding:8px 16px;border-radius:50px;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--muted);
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:.82rem;
+  cursor:pointer;transition:all .25s;white-space:nowrap;
+}
+.ntab:hover{color:var(--text);border-color:#7040cc;}
+.ntab.active {
+  background:linear-gradient(135deg,#5520c8,#8040f0);
+  border-color:transparent;color:#fff;
+  box-shadow:0 4px 24px rgba(128,64,240,.5);
+}
+
+/* ===== SECTIONS ===== */
+.section{display:none;padding:0 14px 20px;animation:fadeUp .35s ease;position:relative;z-index:5;}
+.section.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== SECTION TITLE ===== */
+.stitle {
+  font-family:'Cairo',sans-serif;
+  font-size:.95rem;font-weight:900;color:var(--gold2);
+  margin:20px 0 12px;
+  display:flex;align-items:center;gap:8px;
+}
+.stitle::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+/* ===== HERO ===== */
+.hero {
+  background:linear-gradient(135deg,#1a0850 0%,#3a10a8 50%,#12003a 100%);
+  border-radius:28px;padding:26px 22px;
+  border:1px solid rgba(128,80,240,.4);
+  box-shadow:0 20px 70px rgba(58,16,168,.35),inset 0 1px 0 rgba(255,255,255,.12);
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;overflow:hidden;margin-bottom:14px;
+}
+.hero::before {
+  content:'';position:absolute;top:-80px;left:30%;
+  width:250px;height:250px;
+  background:radial-gradient(circle,rgba(255,210,63,.12) 0%,transparent 70%);
+  border-radius:50%;
+}
+.hero::after {
+  content:'✦ ✦ ✦';position:absolute;bottom:12px;right:18px;
+  color:rgba(255,210,63,.2);font-size:.7rem;letter-spacing:6px;
+}
+.hero-content{flex:1;}
+.hero-title {
+  font-family:'Cairo',sans-serif;
+  font-size:1.3rem;font-weight:900;
+  color:#ffd23f;line-height:1.2;margin-bottom:6px;
+  text-shadow:0 0 30px rgba(255,210,63,.4);
+}
+.hero-sub{font-size:.88rem;color:rgba(237,232,255,.75);margin-bottom:16px;}
+.btn-primary {
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#ffd23f,#ff8c00);
+  color:#0d0622;font-family:'Cairo',sans-serif;font-weight:900;
+  font-size:.9rem;padding:11px 22px;border-radius:50px;
+  border:none;cursor:pointer;
+  box-shadow:0 4px 24px rgba(255,210,63,.4);
+  transition:all .2s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 36px rgba(255,210,63,.6);}
+.hero-orb{font-size:4.8rem;animation:heroFloat 4s ease-in-out infinite;margin-right:6px;filter:drop-shadow(0 0 20px rgba(255,210,63,.4));}
+@keyframes heroFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(4deg)}}
+
+.daily-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;}
+.daily-card {
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:18px;text-align:center;
+  position:relative;overflow:hidden;
+  transition:transform .2s;
+}
+.daily-card:hover{transform:translateY(-3px);}
+.daily-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;border-radius:20px 20px 0 0;}
+.dc-green::before{background:linear-gradient(90deg,#00e676,#00b050);}
+.dc-amber::before{background:linear-gradient(90deg,#ffb300,#ff6f00);}
+.daily-num{font-size:2.4rem;font-weight:900;line-height:1;}
+.dc-green .daily-num{color:#00e676;}
+.dc-amber .daily-num{color:#ffb300;}
+.daily-lbl{font-size:.7rem;color:var(--muted);margin-top:4px;}
+
+/* ===== GAMES GRID ===== */
+.games-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.game-card {
+  border-radius:24px;padding:18px 16px;
+  cursor:pointer;transition:all .35s cubic-bezier(.175,.885,.32,1.275);
+  border:1px solid transparent;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;gap:6px;
+  min-height:160px;
+}
+.game-card::before {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.09) 0%,transparent 60%);
+  pointer-events:none;
+}
+.game-card::after {
+  content:'';position:absolute;bottom:-40px;right:-40px;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+  pointer-events:none;
+}
+.game-card:hover{transform:translateY(-7px) scale(1.03);box-shadow:0 20px 60px #00000070 !important;}
+.game-card:active{transform:scale(.97);}
+
+.gc1{background:linear-gradient(135deg,#0d2a80,#1a5aff);border-color:rgba(77,153,255,.35);box-shadow:0 14px 45px rgba(26,90,255,.3);}
+.gc2{background:linear-gradient(135deg,#024e38,#00b87c);border-color:rgba(0,230,118,.35);box-shadow:0 14px 45px rgba(0,184,124,.3);}
+.gc3{background:linear-gradient(135deg,#6b1a00,#ff4500);border-color:rgba(255,69,0,.4);box-shadow:0 14px 45px rgba(255,69,0,.3);}
+.gc4{background:linear-gradient(135deg,#3d0a80,#9b30ff);border-color:rgba(184,127,255,.35);box-shadow:0 14px 45px rgba(155,48,255,.3);}
+.gc5{background:linear-gradient(135deg,#7a0040,#ff1a7f);border-color:rgba(255,77,125,.35);box-shadow:0 14px 45px rgba(255,26,127,.3);}
+.gc6{background:linear-gradient(135deg,#004060,#0090d0);border-color:rgba(0,200,255,.35);box-shadow:0 14px 45px rgba(0,144,208,.3);}
+
+.gcard-icon{font-size:2.4rem;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));}
+.gcard-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:1rem;color:#fff;}
+.gcard-desc{font-size:.74rem;color:rgba(255,255,255,.72);}
+.gcard-btn {
+  margin-top:auto;
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.28);
+  color:#fff;font-weight:700;font-size:.76rem;
+  padding:6px 14px;border-radius:20px;align-self:flex-start;
+  transition:all .2s;
+}
+.gcard-btn:hover{background:rgba(255,255,255,.28);}
+.gcard-badge {
+  position:absolute;top:12px;left:12px;
+  background:rgba(255,210,63,.9);
+  color:#0d0622;font-weight:900;font-size:.6rem;
+  padding:3px 8px;border-radius:20px;
+}
+
+/* ===== GAME ARENA ===== */
+.arena{display:none;margin-top:16px;}
+.arena.active{display:block;animation:fadeUp .35s ease;}
+.arena-shell {
+  background:var(--card);border:1px solid var(--border);
+  border-radius:30px;overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,.75);
+}
+.arena-top {
+  background:linear-gradient(135deg,#13093a,#22106a);
+  padding:16px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.arena-top::after {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(128,64,240,.08),transparent);
+  animation:arenaSheen 4s linear infinite;
+}
+@keyframes arenaSheen{from{transform:translateX(-100%)}to{transform:translateX(200%)}}
+.arena-name{font-family:'Cairo',sans-serif;font-size:.92rem;font-weight:900;color:var(--gold2);}
+.arena-stats{display:flex;gap:8px;align-items:center;}
+.astat {
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:6px 12px;text-align:center;
+}
+.astat-n{font-size:1.1rem;font-weight:900;color:var(--gold);line-height:1;}
+.astat-l{font-size:.6rem;color:var(--muted);}
+.close-btn {
+  background:rgba(255,77,125,.1);border:1px solid rgba(255,77,125,.3);
+  color:var(--rose);border-radius:10px;padding:7px 14px;
+  cursor:pointer;font-weight:700;font-size:.78rem;
+  transition:all .2s;
+}
+.close-btn:hover{background:rgba(255,77,125,.2);}
+
+/* PROGRESS */
+.prog-wrap{height:4px;background:rgba(255,255,255,.06);}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,#b87fff,#ffd23f);
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 10px rgba(184,127,255,.6);
+}
+
+/* TIMER RING */
+.timer-section{padding:14px 18px 0;display:flex;align-items:center;justify-content:flex-end;gap:10px;}
+.timer-ring-wrap{position:relative;width:56px;height:56px;}
+.timer-ring-wrap svg{transform:rotate(-90deg);}
+.timer-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:4;}
+.timer-arc{fill:none;stroke:var(--teal);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .1s linear,stroke .3s;}
+.timer-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;color:var(--teal);
+}
+
+/* QUESTION */
+.q-box {
+  margin:14px 18px;
+  background:linear-gradient(135deg,#1a0850,#2e1280);
+  border:1px solid rgba(128,80,240,.4);
+  border-radius:24px;padding:30px 20px;
+  text-align:center;
+  box-shadow:0 10px 40px rgba(58,16,168,.4),inset 0 1px 0 rgba(255,255,255,.12);
+  position:relative;overflow:hidden;
+}
+.q-particles {
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(184,127,255,.06) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(0,245,212,.04) 0%,transparent 50%);
+}
+.q-star1 {
+  position:absolute;top:12px;right:16px;
+  font-size:1.1rem;color:rgba(255,210,63,.25);
+  animation:spinStar 10s linear infinite;
+}
+.q-star2 {
+  position:absolute;bottom:12px;left:16px;
+  font-size:.7rem;color:rgba(0,245,212,.25);
+  animation:spinStar 7s linear infinite reverse;
+}
+@keyframes spinStar{to{transform:rotate(360deg)}}
+.q-text {
+  font-family:'Orbitron',sans-serif;
+  font-size:2.6rem;font-weight:900;color:#fff;
+  text-shadow:0 0 40px rgba(184,127,255,.6),0 0 80px rgba(184,127,255,.2);
+  letter-spacing:.08em;
+  position:relative;z-index:1;
+}
+.q-hint{font-size:.8rem;color:var(--teal);margin-top:10px;opacity:.9;position:relative;z-index:1;}
+
+/* ANSWERS */
+.answers-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 18px;}
+.ans-btn {
+  background:rgba(255,255,255,.05);
+  border:2px solid rgba(58,34,120,.8);
+  border-radius:20px;padding:20px 10px;
+  font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;
+  color:var(--text);cursor:pointer;transition:all .22s;
+  position:relative;overflow:hidden;
+}
+.ans-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.04),transparent);
+  pointer-events:none;
+}
+.ans-btn:hover:not(:disabled) {
+  border-color:var(--purple);
+  background:rgba(184,127,255,.15);
+  transform:scale(1.06);
+  box-shadow:0 0 28px rgba(184,127,255,.4);
+}
+.ans-btn.correct {
+  border-color:var(--green);background:rgba(0,230,118,.15);
+  color:var(--green);box-shadow:0 0 36px rgba(0,230,118,.5);
+  animation:correctPop .45s ease;
+}
+.ans-btn.wrong {
+  border-color:var(--rose);background:rgba(255,77,125,.15);
+  color:var(--rose);box-shadow:0 0 24px rgba(255,77,125,.4);
+  animation:shake .4s ease;
+}
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+
+/* FEEDBACK */
+.feedback-bar {
+  margin:0 18px 14px;padding:11px 16px;border-radius:16px;
+  font-weight:700;font-size:.9rem;text-align:center;
+  opacity:0;transition:opacity .25s;
+}
+.feedback-bar.show{opacity:1;}
+.fb-correct{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);color:var(--green);}
+.fb-wrong{background:rgba(255,77,125,.12);border:1px solid rgba(255,77,125,.3);color:var(--rose);}
+
+/* ===== BALLOON MINI-GAME ===== */
+.balloon-arena {
+  min-height:300px;position:relative;
+  background:linear-gradient(180deg,#0a1a3a 0%,#0d0620 100%);
+  border-radius:20px;margin:14px 18px;overflow:hidden;
+  border:1px solid rgba(0,200,255,.2);
+}
+.balloon {
+  position:absolute;bottom:-60px;
+  font-size:2.5rem;cursor:pointer;
+  animation:riseUp linear forwards;
+  filter:drop-shadow(0 0 12px currentColor);
+  user-select:none;
+  transition:transform .1s;
+}
+.balloon:hover{transform:scale(1.15);}
+@keyframes riseUp{from{bottom:-60px;opacity:1}to{bottom:110%;opacity:.8}}
+.balloon-q {
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.2);
+  border-radius:16px;padding:10px 20px;
+  font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;color:#fff;
+  white-space:nowrap;z-index:10;
+  text-shadow:0 0 20px rgba(184,127,255,.8);
+}
+
+/* ===== RULES ===== */
+.rules-group{margin-bottom:20px;}
+.rg-header{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1rem;color:var(--text);margin-bottom:10px;}
+.rg-pill{padding:3px 12px;border-radius:20px;font-size:.75rem;font-weight:700;}
+.rg-add{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);color:var(--green);}
+.rg-sub{background:rgba(255,77,125,.12);border:1px solid rgba(255,77,125,.3);color:var(--rose);}
+.rule-row {
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:14px 16px;margin-bottom:8px;
+  transition:all .22s;
+}
+.rule-row:hover{border-color:#7040cc;transform:translateX(-4px);box-shadow:4px 0 20px rgba(112,64,204,.2);}
+.rule-formula {
+  font-family:'Orbitron',sans-serif;
+  font-size:.88rem;font-weight:700;color:var(--gold2);
+  background:rgba(255,210,63,.06);border:1px solid rgba(255,210,63,.2);
+  border-radius:10px;padding:8px 16px;min-width:150px;text-align:center;
+  white-space:nowrap;
+}
+.rule-explain{font-size:.82rem;color:var(--muted);line-height:1.5;}
+
+/* ===== PLAN ===== */
+.plan-hero {
+  background:linear-gradient(135deg,#130840,#220f64,#0f0628);
+  border:1px solid var(--border);border-radius:28px;
+  padding:22px;margin-bottom:14px;
+  box-shadow:0 18px 55px rgba(0,0,0,.5);
+}
+.plan-hero h2{font-family:'Cairo',sans-serif;font-size:1.1rem;font-weight:900;color:var(--gold2);margin-bottom:6px;}
+.plan-hero p{font-size:.84rem;color:var(--muted);margin-bottom:12px;}
+.plan-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.ptag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 12px;font-size:.74rem;color:var(--text);}
+
+.week-card{background:var(--card);border:1px solid var(--border);border-radius:22px;margin-bottom:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.4);}
+.wk-header{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .2s;user-select:none;}
+.wk-header:hover{background:rgba(255,255,255,.04);}
+.wk-label{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.92rem;color:#fff;}
+.wk-num{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;}
+.wn1{background:linear-gradient(135deg,#1a5aff,#4d9fff);}
+.wn2{background:linear-gradient(135deg,#00b87c,#00e676);}
+.wn3{background:linear-gradient(135deg,#d97706,#ffb300);}
+.wn4{background:linear-gradient(135deg,#7c3aed,#b87fff);}
+.wk-arrow{color:var(--muted);transition:transform .3s;font-size:1.1rem;}
+.wk-header.open .wk-arrow{transform:rotate(180deg);}
+.wk-body{display:none;padding:0 16px 16px;}
+.wk-body.open{display:block;}
+
+.lesson-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin-bottom:12px;}
+.lc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.lc-badge{background:linear-gradient(135deg,#5520c8,#8040f0);color:#fff;font-weight:900;font-size:.72rem;padding:4px 12px;border-radius:20px;}
+.lc-title{font-weight:700;font-size:.88rem;color:var(--text);}
+
+.plan-step{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.plan-step:last-child{border-bottom:none;}
+.step-num{width:26px;height:26px;border-radius:8px;background:rgba(184,127,255,.2);border:1px solid rgba(184,127,255,.3);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--purple);flex-shrink:0;}
+.step-content{flex:1;}
+.step-text{font-size:.82rem;color:var(--text);line-height:1.4;}
+.step-dur{font-size:.68rem;color:var(--muted);margin-top:2px;}
+.step-timer-btn {
+  flex-shrink:0;
+  background:rgba(0,245,212,.1);border:1px solid rgba(0,245,212,.3);
+  color:var(--teal);border-radius:10px;padding:5px 10px;
+  font-size:.7rem;font-weight:700;cursor:pointer;
+  transition:all .2s;white-space:nowrap;
+  display:flex;align-items:center;gap:4px;
+}
+.step-timer-btn:hover{background:rgba(0,245,212,.2);}
+.step-timer-btn.running{background:rgba(255,210,63,.1);border-color:rgba(255,210,63,.4);color:var(--gold);}
+.step-timer-btn.done{background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green);}
+
+/* FLOATING TIMER */
+.float-timer {
+  position:fixed;bottom:92px;left:50%;transform:translateX(-50%);
+  z-index:200;
+  background:rgba(8,6,20,.96);
+  border:1px solid var(--border);border-radius:28px;padding:14px 20px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(58,34,120,.5);
+  min-width:260px;transition:all .35s cubic-bezier(.175,.885,.32,1.275);
+  opacity:0;pointer-events:none;transform:translateX(-50%) translateY(20px);
+  backdrop-filter:blur(20px);
+}
+.float-timer.visible{opacity:1;pointer-events:all;transform:translateX(-50%) translateY(0);}
+.ft-icon{font-size:1.8rem;}
+.ft-info{flex:1;}
+.ft-label{font-size:.78rem;color:var(--muted);}
+.ft-time{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:700;color:var(--teal);}
+.ft-time.urgent{color:var(--rose);animation:blink .5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ft-stop{background:rgba(255,77,125,.12);border:1px solid rgba(255,77,125,.3);color:var(--rose);border-radius:12px;padding:7px 14px;cursor:pointer;font-weight:700;font-size:.78rem;transition:all .2s;}
+.ft-stop:hover{background:rgba(255,77,125,.25);}
+
+/* ===== AWARDS ===== */
+.stars-hero {
+  background:linear-gradient(135deg,#130840,#1e1048);
+  border:1px solid rgba(255,210,63,.2);border-radius:28px;
+  padding:28px;text-align:center;margin-bottom:20px;
+  box-shadow:0 0 50px rgba(255,210,63,.06);
+  position:relative;overflow:hidden;
+}
+.stars-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(255,210,63,.06) 0%,transparent 70%);
+}
+.stars-display{font-size:2.8rem;letter-spacing:6px;margin-bottom:8px;position:relative;}
+.stars-count{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;color:#ffd23f;position:relative;}
+.stars-sub{font-size:.84rem;color:var(--muted);margin-top:6px;position:relative;}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.ach-card {
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:16px 10px;text-align:center;
+  transition:all .35s;opacity:.45;filter:grayscale(.7) brightness(.7);
+}
+.ach-card.earned {
+  border-color:rgba(255,210,63,.4);
+  background:linear-gradient(135deg,#140840,#221060);
+  opacity:1;filter:none;
+  box-shadow:0 0 28px rgba(255,210,63,.15);
+}
+.ach-icon{font-size:2.2rem;}
+.ach-name{font-size:.72rem;font-weight:700;color:var(--text);margin-top:6px;}
+.ach-desc{font-size:.62rem;color:var(--muted);margin-top:2px;}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(8,6,20,.97);
+  border-top:1px solid var(--border);
+  display:flex;
+  box-shadow:0 -10px 35px rgba(0,0,0,.6);
+  backdrop-filter:blur(20px);
+}
+.bn-item{flex:1;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .2s;}
+.bn-icon{font-size:1.3rem;filter:grayscale(.7) brightness(.7);transition:all .2s;}
+.bn-label{font-size:.6rem;font-weight:700;color:var(--muted);transition:all .2s;}
+.bn-item.active .bn-icon{filter:none;}
+.bn-item.active .bn-label{color:var(--gold);}
+.bn-item.active::after{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:0 0 4px 4px;}
+.bn-item{position:relative;}
+
+/* ===== POPUP ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.overlay.show{display:flex;}
+.popup {
+  background:linear-gradient(135deg,#1e1548,#2a1a60);
+  border:1px solid var(--border);
+  border-radius:32px;padding:36px 30px;text-align:center;
+  max-width:320px;width:92%;
+  animation:popIn .45s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow:0 30px 90px rgba(0,0,0,.85),0 0 0 1px rgba(58,34,120,.5),inset 0 1px 0 rgba(255,255,255,.1);
+  position:relative;overflow:hidden;
+}
+.popup::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top,rgba(184,127,255,.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+@keyframes popIn{from{transform:scale(.5) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.popup-emoji{font-size:5rem;margin-bottom:8px;display:block;animation:heroFloat 3s ease-in-out infinite;}
+.popup-title{font-family:'Cairo',sans-serif;font-size:1.6rem;font-weight:900;color:var(--gold2);margin-bottom:8px;}
+.popup-score{font-size:.9rem;color:var(--muted);margin-bottom:20px;}
+.popup-stars{font-size:2rem;margin-bottom:18px;letter-spacing:6px;}
+.popup-btn{width:100%;}
+
+/* MISC */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:8px 0;}
+
+/* ===== PARTICLE BURST ===== */
+.particle {
+  position:fixed;pointer-events:none;z-index:999;
+  width:8px;height:8px;border-radius:50%;
+  animation:particleFly .8s ease-out forwards;
+}
+@keyframes particleFly{
+  0%{transform:translate(0,0) scale(1);opacity:1;}
+  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0;}
+}
+</style>
 </head>
 <body>
-  <div class="header">
-    <div class="brand">
-      <div class="brand-gem">✨</div>
-      <div>
-        <div class="brand-name">Minas Magic Math</div>
-        <div class="brand-sub">رحلة الأرقام السحرية</div>
-      </div>
+
+<!-- BACKGROUND -->
+<div class="bg-canvas">
+  <div class="nebula n1"></div>
+  <div class="nebula n2"></div>
+  <div class="nebula n3"></div>
+  <canvas class="star-field" id="starCanvas"></canvas>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">
+    <div class="brand-gem">✨</div>
+    <div class="brand-text">
+      <div class="brand-name">MINAS MATH</div>
+      <div class="brand-sub">رحلة الأرقام السحرية ⭐</div>
     </div>
-    <div class="hb">
-      <div class="badge">⭐ <span id="hStars">0</span></div>
-      <div class="badge">🏆 <span id="hLevel">1</span></div>
+  </div>
+  <div class="header-badges">
+    <div class="hbadge">⭐ <span id="hStars">0</span></div>
+    <div class="hbadge">🏆 <span id="hLevel">1</span></div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <div class="ntab active" onclick="go('home')">🏠 الرئيسية</div>
+  <div class="ntab" onclick="go('games')">🎮 الألعاب</div>
+  <div class="ntab" onclick="go('rules')">📚 القواعد</div>
+  <div class="ntab" onclick="go('plan')">📅 الخطة</div>
+  <div class="ntab" onclick="go('awards')">🏆 الجوائز</div>
+</div>
+
+<!-- =================== HOME =================== -->
+<div class="section active" id="sec-home">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-title">أهلاً بك في<br>عالم السحر! 🌟</div>
+      <div class="hero-sub">الأرقام تنتظرك — ابدأ المغامرة الآن!</div>
+      <button class="btn-primary" onclick="go('games')">🎮 العب الآن</button>
+    </div>
+    <div class="hero-orb">🦁</div>
+  </div>
+
+  <div class="stitle">⚡ إحصائياتي اليومية</div>
+  <div class="daily-grid">
+    <div class="daily-card dc-green">
+      <div class="daily-num" id="hCorrect">0</div>
+      <div class="daily-lbl">إجابات صحيحة اليوم</div>
+    </div>
+    <div class="daily-card dc-amber">
+      <div class="daily-num">🔥1</div>
+      <div class="daily-lbl">أيام متتالية</div>
     </div>
   </div>
 
-  <div class="nav-tabs">
-    <button class="ntab active" onclick="go('home')">🏠 الرئيسية</button>
-    <button class="ntab" onclick="go('games')">🎮 الألعاب</button>
-    <button class="ntab" onclick="go('rules')">📚 القواعد</button>
-    <button class="ntab" onclick="go('plan')">📅 الخطة</button>
-    <button class="ntab" onclick="go('awards')">🏆 الجوائز</button>
+  <div class="stitle">🎯 اللعبة المقترحة</div>
+  <div class="game-card gc5" onclick="startGame('balloon')" style="margin-bottom:10px;">
+    <span class="gcard-badge">⭐ أفضل لعبة</span>
+    <div class="gcard-icon">🎈</div>
+    <div class="gcard-title">البالونات الطائرة</div>
+    <div class="gcard-desc">انقر على البالون الصحيح قبل أن يطير!</div>
+    <div class="gcard-btn">ابدأ الآن ←</div>
   </div>
+</div>
 
-  <div class="mascot-container" id="mascotContainer">
-    <div class="mascot-bubble" id="mascotBubble">أهلاً! أنا أسد الأرقام 🦁 جاهز للمغامرة؟</div>
-    <div class="mascot-avatar" id="mascotAvatar">🦁</div>
-  </div>
+<!-- =================== GAMES =================== -->
+<div class="section" id="sec-games">
 
-  <div class="float-timer" id="floatTimer">
-    <div class="ft-icon">⏱️</div>
-    <div class="ft-info">
-      <div class="ft-label" id="ftLabel">مؤقت النشاط</div>
-      <div class="ft-time" id="ftTime">00:00</div>
-    </div>
-    <button class="ft-stop" onclick="stopFloatTimer()">إيقاف</button>
-  </div>
+  <div class="stitle">🎮 اختر لعبتك</div>
+  <div class="games-grid">
 
-  <div class="overlay" id="overlay"></div>
-
-  <div class="section active" id="sec-home">
-    <div class="hero">
-      <div class="hero-content">
-        <div class="hero-title">أهلاً بك في<br>عالم سحر الرياضيات! 🔢</div>
-        <div class="hero-sub">ادخل عالم الأرقام السحرية وأصبح بطلاً! 🚀</div>
-        <button class="btn-primary" onclick="go('games')">🎮 العب الآن</button>
-      </div>
-      <div class="hero-orb">🦁</div>
+    <div class="game-card gc1" onclick="startGame('friends5')">
+      <div class="gcard-icon">👫</div>
+      <div class="gcard-title">أصدقاء 5</div>
+      <div class="gcard-desc">قواعد الجمع والطرح مع 5</div>
+      <div class="gcard-btn">ابدأ ←</div>
     </div>
 
-    <div class="stitle">⚡ إحصائياتي اليومية</div>
-    <div class="daily-grid">
-      <div class="daily-card"><div class="daily-num" id="hCorrect">0</div><div class="daily-lbl">إجابات صحيحة اليوم</div></div>
-      <div class="daily-card"><div class="daily-num">🔥1</div><div class="daily-lbl">أيام متتالية</div></div>
-      <div class="daily-card"><div class="daily-num" id="hGames">0</div><div class="daily-lbl">ألعاب مكتملة</div></div>
-      <div class="daily-card"><div class="daily-num" id="hAccuracy">0%</div><div class="daily-lbl">نسبة الدقة</div></div>
+    <div class="game-card gc2" onclick="startGame('friends10')">
+      <div class="gcard-icon">🔟</div>
+      <div class="gcard-title">أصدقاء 10</div>
+      <div class="gcard-desc">قواعد الجمع والطرح مع 10</div>
+      <div class="gcard-btn">ابدأ ←</div>
     </div>
 
-    <div class="stitle">🎯 اللعبة المقترحة</div>
-    <div class="game-card" onclick="startGame('speedmath')">
+    <div class="game-card gc3" onclick="startGame('speed')">
       <div class="gcard-icon">⚡</div>
-      <div class="gcard-title">تحدي السرعة الذهنية</div>
-      <div class="gcard-desc">أجب بسرعة واحصل على نقاط أكثر</div>
-      <div class="gcard-btn">ابدأ الآن ←</div>
+      <div class="gcard-title">سرعة البرق</div>
+      <div class="gcard-desc">أجب في 8 ثوانٍ أو تخسر!</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+
+    <div class="game-card gc4" onclick="startGame('missing')">
+      <div class="gcard-icon">❓</div>
+      <div class="gcard-title">الرقم المختفي</div>
+      <div class="gcard-desc">اكتشف الرقم الناقص</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+
+    <div class="game-card gc5" onclick="startGame('balloon')">
+      <span class="gcard-badge">🎈 حصري</span>
+      <div class="gcard-icon">🎈</div>
+      <div class="gcard-title">البالونات الطائرة</div>
+      <div class="gcard-desc">انقر البالون الصحيح!</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+
+    <div class="game-card gc6" onclick="startGame('match')">
+      <div class="gcard-icon">🔗</div>
+      <div class="gcard-title">مطابقة القاعدة</div>
+      <div class="gcard-desc">طابق الصيغة بالجواب</div>
+      <div class="gcard-btn">ابدأ ←</div>
+    </div>
+
+  </div>
+
+  <!-- GAME ARENA (Regular) -->
+  <div class="arena" id="arena">
+    <div class="arena-shell">
+      <div class="arena-top">
+        <div class="arena-name" id="arenaName">🎮 اللعبة</div>
+        <div class="arena-stats">
+          <div class="astat"><div class="astat-n" id="aScore">0</div><div class="astat-l">نقاط</div></div>
+          <div class="astat"><div class="astat-n" id="aQ">0/10</div><div class="astat-l">سؤال</div></div>
+          <button class="close-btn" onclick="closeArena()">✕ إغلاق</button>
+        </div>
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+      <div class="timer-section">
+        <span style="font-size:.73rem;color:var(--muted);">الوقت</span>
+        <div class="timer-ring-wrap">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <circle class="timer-bg" cx="28" cy="28" r="22"/>
+            <circle class="timer-arc" id="timerArc" cx="28" cy="28" r="22"
+              stroke-dasharray="138.2" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-num" id="timerNum">15</div>
+        </div>
+      </div>
+
+      <div class="q-box">
+        <div class="q-particles"></div>
+        <div class="q-star1">✦</div>
+        <div class="q-star2">◆</div>
+        <div class="q-text" id="qText">جاهز؟</div>
+        <div class="q-hint" id="qHint">✦</div>
+      </div>
+
+      <div class="feedback-bar" id="feedbackBar"></div>
+      <div class="answers-wrap" id="answersWrap"></div>
     </div>
   </div>
 
-  <div class="section" id="sec-games">
-    <div class="stitle">🎮 الألعاب</div>
-    <div class="games-grid">
-      <div class="game-card" onclick="openActivity('speedmath')"><div class="gcard-icon">⚡</div><div class="gcard-title">Speed Math</div><div class="gcard-desc">سرعة + تركيز + نقاط</div><div class="gcard-btn">تشغيل</div></div>
-      <div class="game-card" onclick="openActivity('dice')"><div class="gcard-icon">🎲</div><div class="gcard-title">Dice Game</div><div class="gcard-desc">ارمِ النرد واحسب الناتج</div><div class="gcard-btn">تشغيل</div></div>
-      <div class="game-card" onclick="openActivity('puzzle')"><div class="gcard-icon">🧩</div><div class="gcard-title">Puzzle</div><div class="gcard-desc">أوجد الرقم المفقود</div><div class="gcard-btn">تشغيل</div></div>
-      <div class="game-card" onclick="openActivity('memory')"><div class="gcard-icon">🧠</div><div class="gcard-title">Memory</div><div class="gcard-desc">اكشف البطاقات المتطابقة</div><div class="gcard-btn">تشغيل</div></div>
-      <div class="game-card" onclick="openActivity('typing')"><div class="gcard-icon">⌨️</div><div class="gcard-title">Typing</div><div class="gcard-desc">اكتب الجواب السريع</div><div class="gcard-btn">تشغيل</div></div>
-      <div class="game-card" onclick="openActivity('dragdrop')"><div class="gcard-icon">🎯</div><div class="gcard-title">Match</div><div class="gcard-desc">اختيار القاعدة الصحيحة</div><div class="gcard-btn">تشغيل</div></div>
-    </div>
-    <div id="actHost" class="card" style="margin-top:12px; display:none;"></div>
-  </div>
-
-  <div class="section" id="sec-rules">
-    <div class="stitle">📚 القواعد</div>
-    <div class="rules-group">
-      <div class="rg-header"><span class="rg-pill rg-add">جمع</span> أصدقاء 5</div>
-      <div class="rule-row" onclick="highlightRule(this)"><div class="rule-formula">+4 = +5 − 1</div><div class="rule-explain">لجمع 4: أضف 5 ثم اطرح 1</div></div>
-      <div class="rule-row" onclick="highlightRule(this)"><div class="rule-formula">+3 = +5 − 2</div><div class="rule-explain">لجمع 3: أضف 5 ثم اطرح 2</div></div>
-      <div class="rule-row" onclick="highlightRule(this)"><div class="rule-formula">+2 = +5 − 3</div><div class="rule-explain">لجمع 2: أضف 5 ثم اطرح 3</div></div>
-      <div class="rule-row" onclick="highlightRule(this)"><div class="rule-formula">+1 = +5 − 4</div><div class="rule-explain">لجمع 1: أضف 5 ثم اطرح 4</div></div>
+  <!-- BALLOON ARENA -->
+  <div class="arena" id="balloonArena">
+    <div class="arena-shell">
+      <div class="arena-top">
+        <div class="arena-name">🎈 البالونات الطائرة</div>
+        <div class="arena-stats">
+          <div class="astat"><div class="astat-n" id="bScore">0</div><div class="astat-l">نقاط</div></div>
+          <div class="astat"><div class="astat-n" id="bQ">0/10</div><div class="astat-l">سؤال</div></div>
+          <button class="close-btn" onclick="closeBalloon()">✕ إغلاق</button>
+        </div>
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" id="bProgFill" style="width:0%"></div></div>
+      <div class="balloon-arena" id="balloonField">
+        <div class="balloon-q" id="balloonQ">?</div>
+      </div>
+      <div class="feedback-bar" id="bFeedbackBar"></div>
     </div>
   </div>
 
-  <div class="section" id="sec-plan">
-    <div class="stitle">📅 الخطة</div>
-    <div class="plan-hero">
-      <h2>الخطة التدريسية الشهرية</h2>
-      <p>12 درساً · 4 أسابيع · 3 ساعات أسبوعياً</p>
-      <div class="plan-tags">
-        <span class="ptag">📖 54 صفحة تمارين</span>
-        <span class="ptag">🎮 3 دروس أسبوعياً</span>
-        <span class="ptag">⏱️ 60 دقيقة للدرس</span>
+</div>
+
+<!-- =================== RULES =================== -->
+<div class="section" id="sec-rules">
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-add">جمع</span> أصدقاء 5 — الجمع</div>
+    <div class="rule-row"><div class="rule-formula">+4 = +5 − 1</div><div class="rule-explain">لجمع 4: أضف 5 ثم اطرح 1</div></div>
+    <div class="rule-row"><div class="rule-formula">+3 = +5 − 2</div><div class="rule-explain">لجمع 3: أضف 5 ثم اطرح 2</div></div>
+    <div class="rule-row"><div class="rule-formula">+2 = +5 − 3</div><div class="rule-explain">لجمع 2: أضف 5 ثم اطرح 3</div></div>
+    <div class="rule-row"><div class="rule-formula">+1 = +5 − 4</div><div class="rule-explain">لجمع 1: أضف 5 ثم اطرح 4</div></div>
+  </div>
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-sub">طرح</span> أصدقاء 5 — الطرح</div>
+    <div class="rule-row"><div class="rule-formula">−4 = −5 + 1</div><div class="rule-explain">لطرح 4: اطرح 5 ثم أضف 1</div></div>
+    <div class="rule-row"><div class="rule-formula">−3 = −5 + 2</div><div class="rule-explain">لطرح 3: اطرح 5 ثم أضف 2</div></div>
+    <div class="rule-row"><div class="rule-formula">−2 = −5 + 3</div><div class="rule-explain">لطرح 2: اطرح 5 ثم أضف 3</div></div>
+    <div class="rule-row"><div class="rule-formula">−1 = −5 + 4</div><div class="rule-explain">لطرح 1: اطرح 5 ثم أضف 4</div></div>
+  </div>
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-add">جمع</span> أصدقاء 10 — الجمع</div>
+    <div class="rule-row"><div class="rule-formula">+9 = +10 − 1</div><div class="rule-explain">لجمع 9: أضف 10 ثم اطرح 1</div></div>
+    <div class="rule-row"><div class="rule-formula">+8 = +10 − 2</div><div class="rule-explain">لجمع 8: أضف 10 ثم اطرح 2</div></div>
+    <div class="rule-row"><div class="rule-formula">+7 = +10 − 3</div><div class="rule-explain">لجمع 7: أضف 10 ثم اطرح 3</div></div>
+    <div class="rule-row"><div class="rule-formula">+6 = +10 − 4</div><div class="rule-explain">لجمع 6: أضف 10 ثم اطرح 4</div></div>
+  </div>
+  <div class="rules-group">
+    <div class="rg-header"><span class="rg-pill rg-sub">طرح</span> أصدقاء 10 — الطرح</div>
+    <div class="rule-row"><div class="rule-formula">−9 = −10 + 1</div><div class="rule-explain">لطرح 9: اطرح 10 ثم أضف 1</div></div>
+    <div class="rule-row"><div class="rule-formula">−8 = −10 + 2</div><div class="rule-explain">لطرح 8: اطرح 10 ثم أضف 2</div></div>
+    <div class="rule-row"><div class="rule-formula">−7 = −10 + 3</div><div class="rule-explain">لطرح 7: اطرح 10 ثم أضف 3</div></div>
+    <div class="rule-row"><div class="rule-formula">−6 = −10 + 4</div><div class="rule-explain">لطرح 6: اطرح 10 ثم أضف 4</div></div>
+  </div>
+</div>
+
+<!-- =================== PLAN =================== -->
+<div class="section" id="sec-plan">
+  <div class="plan-hero">
+    <h2>📅 الخطة التدريسية الشهرية</h2>
+    <p>12 درساً · 4 أسابيع · 3 ساعات أسبوعياً</p>
+    <div class="plan-tags">
+      <span class="ptag">📖 54 صفحة تمارين</span>
+      <span class="ptag">🎮 3 دروس أسبوعياً</span>
+      <span class="ptag">⏱️ 60 دقيقة للدرس</span>
+    </div>
+  </div>
+
+  <div class="week-card">
+    <div class="wk-header open" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn1">١</div><span>الأسبوع الأول: أصدقاء 5 — ص 1–14</span></div>
+      <div class="wk-arrow">▾</div>
+    </div>
+    <div class="wk-body open">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 1</div><div class="lc-title">مقدمة: من هو الصديق 5؟</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎵 أغنية الترحيب والجو الحماسي</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'🎵 أغنية الترحيب')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🎴 قصة "بطل الأرقام" ومعرفة صديق 5</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎴 قصة بطل الأرقام')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🖐️ نشاط الأصابع: اعرف 4+1=5</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🖐️ نشاط الأصابع')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🎮 لعبة البطاقات على الأرض</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎮 لعبة البطاقات')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">5</div><div class="step-content"><div class="step-text">📝 تمارين الكتاب ص 1–4</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'📝 تمارين ص 1-4')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">6</div><div class="step-content"><div class="step-text">⭐ جائزة النجوم والتحفيز</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'⭐ جائزة النجوم')">⏱ ابدأ</button></div>
+      </div>
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 2</div><div class="lc-title">قواعد +4=+5−1 و +3=+5−2</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🔁 مراجعة الدرس السابق بأسئلة سريعة</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'🔁 مراجعة سريعة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🧮 شرح القاعدة بالأحجار الملونة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🧮 شرح بالأحجار')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🎲 لعبة النرد: رمي وتطبيق</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🎲 لعبة النرد')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">📝 تمارين ص 5–9</div><div class="step-dur">20 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,20,'📝 تمارين ص 5-9')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">5</div><div class="step-content"><div class="step-text">🏆 تقييم الدرس وتوزيع النجوم</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🏆 تقييم الدرس')">⏱ ابدأ</button></div>
       </div>
     </div>
   </div>
 
-  <div class="section" id="sec-awards">
-    <div class="stitle">🏆 الجوائز</div>
-    <div class="stars-hero">
-      <div class="stars-display">⭐⭐⭐</div>
-      <div class="stars-count" id="starsCount">0</div>
-      <div class="stars-sub">نجمة حتى الآن</div>
+  <div class="week-card">
+    <div class="wk-header" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn2">٢</div><span>الأسبوع الثاني: الطرح مع 5 — ص 15–28</span></div>
+      <div class="wk-arrow">▾</div>
     </div>
-    <div class="ach-grid">
-      <div class="ach-card" id="ach1"><div class="ach-icon">⭐</div><div class="ach-name">بداية قوية</div><div class="ach-desc">احصل على أول نجمة</div></div>
-      <div class="ach-card" id="ach2"><div class="ach-icon">🔥</div><div class="ach-name">سلسلة</div><div class="ach-desc">10 نجوم</div></div>
-      <div class="ach-card" id="ach3"><div class="ach-icon">👑</div><div class="ach-name">أسطورة</div><div class="ach-desc">25 نجمة</div></div>
+    <div class="wk-body">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 4</div><div class="lc-title">−4=−5+1 و −3=−5+2</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎵 أغنية الطرح السحري</div><div class="step-dur">5 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,5,'🎵 أغنية الطرح')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🧮 شرح عكس القاعدة بالأحجار</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🧮 شرح عكس القاعدة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 15–20</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 15-20')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">⭐ تقييم وجوائز</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'⭐ تقييم وجوائز')">⏱ ابدأ</button></div>
+      </div>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <div class="week-card">
+    <div class="wk-header" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn3">٣</div><span>الأسبوع الثالث: أصدقاء 10 — ص 29–41</span></div>
+      <div class="wk-arrow">▾</div>
+    </div>
+    <div class="wk-body">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 7</div><div class="lc-title">+9=+10−1 و +8=+10−2</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🚀 انطلاق: قصة صديق 10</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🚀 قصة صديق 10')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">🧩 نشاط الأصابع العشرة</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🧩 نشاط الأصابع العشرة')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">📝 تمارين ص 29–35</div><div class="step-dur">25 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,25,'📝 تمارين ص 29-35')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🏆 مسابقة الحساب الذهني</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🏆 مسابقة الحساب')">⏱ ابدأ</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card">
+    <div class="wk-header" onclick="toggleWk(this)">
+      <div class="wk-label"><div class="wk-num wn4">٤</div><span>الأسبوع الرابع: طرح 10 + مراجعة — ص 42–54</span></div>
+      <div class="wk-arrow">▾</div>
+    </div>
+    <div class="wk-body">
+      <div class="lesson-card">
+        <div class="lc-header"><div class="lc-badge">درس 12</div><div class="lc-title">🎉 المراجعة الشاملة ونهاية الكورس</div></div>
+        <div class="plan-step"><div class="step-num">1</div><div class="step-content"><div class="step-text">🎪 حفل استعراض: كل طفل يشرح قاعدة</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎪 حفل الاستعراض')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">2</div><div class="step-content"><div class="step-text">📝 تمارين ص 51–54 الختامية</div><div class="step-dur">20 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,20,'📝 تمارين ختامية')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">3</div><div class="step-content"><div class="step-text">🎮 بطولة الحساب الذهني النهائية</div><div class="step-dur">15 دقيقة</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,15,'🎮 البطولة النهائية')">⏱ ابدأ</button></div>
+        <div class="plan-step"><div class="step-num">4</div><div class="step-content"><div class="step-text">🏆 حفل التخرج + توزيع الشهادات</div><div class="step-dur">10 دقائق</div></div><button class="step-timer-btn" onclick="startPlanTimer(this,10,'🏆 حفل التخرج')">⏱ ابدأ</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== AWARDS =================== -->
+<div class="section" id="sec-awards">
+  <div class="stars-hero">
+    <div class="stars-display" id="starsRow">☆☆☆☆☆</div>
+    <div class="stars-count" id="starsCount">0 نجمة</div>
+    <div class="stars-sub">العب وتحدّى نفسك لتجمع المزيد!</div>
+  </div>
+  <div class="stitle">🏅 إنجازاتي</div>
+  <div class="ach-grid">
+    <div class="ach-card" id="ach1"><div class="ach-icon">🌟</div><div class="ach-name">المبتدئ</div><div class="ach-desc">أول لعبة</div></div>
+    <div class="ach-card" id="ach2"><div class="ach-icon">⚡</div><div class="ach-name">السريع</div><div class="ach-desc">10 نجوم</div></div>
+    <div class="ach-card" id="ach3"><div class="ach-icon">🔥</div><div class="ach-name">المتحمس</div><div class="ach-desc">25 نجمة</div></div>
+    <div class="ach-card" id="ach4"><div class="ach-icon">👑</div><div class="ach-name">البطل</div><div class="ach-desc">50 نجمة</div></div>
+    <div class="ach-card" id="ach5"><div class="ach-icon">🎓</div><div class="ach-name">العبقري</div><div class="ach-desc">100 نجمة</div></div>
+    <div class="ach-card" id="ach6"><div class="ach-icon">🦁</div><div class="ach-name">الأسد</div><div class="ach-desc">كل الألعاب</div></div>
+  </div>
+</div>
+
+<!-- FLOATING PLAN TIMER -->
+<div class="float-timer" id="floatTimer">
+  <div class="ft-icon" id="ftIcon">⏱</div>
+  <div class="ft-info">
+    <div class="ft-label" id="ftLabel">جارٍ العدّ</div>
+    <div class="ft-time" id="ftTime">00:00</div>
+  </div>
+  <button class="ft-stop" onclick="stopPlanTimer()">✕ إيقاف</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="bn-item active" onclick="go('home')"><div class="bn-icon">🏠</div><div class="bn-label">الرئيسية</div></div>
+  <div class="bn-item" onclick="go('games')"><div class="bn-icon">🎮</div><div class="bn-label">الألعاب</div></div>
+  <div class="bn-item" onclick="go('rules')"><div class="bn-icon">📚</div><div class="bn-label">القواعد</div></div>
+  <div class="bn-item" onclick="go('plan')"><div class="bn-icon">📅</div><div class="bn-label">الخطة</div></div>
+  <div class="bn-item" onclick="go('awards')"><div class="bn-icon">🏆</div><div class="bn-label">الجوائز</div></div>
+</div>
+
+<!-- POPUP -->
+<div class="overlay" id="overlay">
+  <div class="popup">
+    <span class="popup-emoji" id="popEmoji">🎉</span>
+    <div class="popup-stars" id="popStars">⭐⭐⭐</div>
+    <div class="popup-title" id="popTitle">رائع!</div>
+    <div class="popup-score" id="popScore">حصلت على 0 نقطة</div>
+    <button class="btn-primary popup-btn" onclick="closePopup()">🎮 العب مجدداً</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ===== AUDIO ENGINE (Web Audio API - صوت منبه حقيقي) ===== */
+const Audio = (function(){
+  let ctx = null;
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    return ctx;
+  }
+
+  function beep(freq, dur, type='sine', vol=0.3) {
+    try {
+      const c = getCtx();
+      const osc = c.createOscillator();
+      const gain = c.createGain();
+      osc.connect(gain); gain.connect(c.destination);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, c.currentTime);
+      gain.gain.setValueAtTime(vol, c.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+      osc.start(c.currentTime);
+      osc.stop(c.currentTime + dur);
+    } catch(e) {}
+  }
+
+  function correct() {
+    beep(523, 0.1, 'sine', 0.3);
+    setTimeout(() => beep(659, 0.1, 'sine', 0.3), 100);
+    setTimeout(() => beep(784, 0.2, 'sine', 0.3), 200);
+  }
+
+  function wrong() {
+    beep(200, 0.15, 'sawtooth', 0.25);
+    setTimeout(() => beep(150, 0.25, 'sawtooth', 0.25), 150);
+  }
+
+  function tick() {
+    beep(880, 0.05, 'square', 0.08);
+  }
+
+  function urgentTick() {
+    beep(1200, 0.05, 'square', 0.12);
+  }
+
+  // منبه حقيقي عند انتهاء التايمر
+  function alarm() {
+    const c = getCtx();
+    const patterns = [
+      [880, 0.15], [0, 0.05], [880, 0.15], [0, 0.05],
+      [1100, 0.2], [0, 0.1], [1100, 0.2], [0, 0.1],
+      [880, 0.15], [0, 0.05], [880, 0.15], [0, 0.05],
+      [1320, 0.4]
+    ];
+    let t = c.currentTime;
+    patterns.forEach(([freq, dur]) => {
+      if (freq > 0) {
+        const osc = c.createOscillator();
+        const gain = c.createGain();
+        osc.connect(gain); gain.connect(c.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.25, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.start(t); osc.stop(t + dur);
+      }
+      t += dur;
+    });
+  }
+
+  function victory() {
+    const notes = [523,659,784,1047];
+    notes.forEach((f, i) => {
+      setTimeout(() => beep(f, 0.25, 'sine', 0.25), i * 130);
+    });
+  }
+
+  return { correct, wrong, tick, urgentTick, alarm, victory };
+})();
+
+/* ===== STATE ===== */
+let totalStars = 0, correctToday = 0;
+let gameScore = 0, gameQ = 0;
+const totalQ = 10;
+let currGame = '', currAns = 0;
+let questionTimer = null, questionSec = 15;
+const gamesPlayed = new Set();
+
+// Balloon state
+let balloonScore = 0, balloonQ = 0, balloonAns = 0;
+let balloonInterval = null, balloonAnimations = [];
+
+// Plan timer state
+let planTimerInterval = null, planTimerSec = 0;
+let planTimerLabel = '', planActiveBtn = null;
+
+/* ===== STARFIELD ===== */
+(function initStars() {
+  const canvas = document.getElementById('starCanvas');
+  const ctx2d = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function makeStars() {
+    stars = Array.from({length: 180}, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      a: Math.random(), da: (Math.random() - 0.5) * 0.008,
+      color: ['#fff','#ffd23f','#b87fff','#00f5d4'][Math.floor(Math.random()*4)]
+    }));
+  }
+
+  function draw() {
+    ctx2d.clearRect(0, 0, W, H);
+    stars.forEach(s => {
+      s.a = Math.max(0.1, Math.min(1, s.a + s.da));
+      if (s.a <= 0.1 || s.a >= 1) s.da *= -1;
+      ctx2d.globalAlpha = s.a;
+      ctx2d.fillStyle = s.color;
+      ctx2d.beginPath();
+      ctx2d.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx2d.fill();
+    });
+    ctx2d.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  resize(); makeStars(); draw();
+  window.addEventListener('resize', () => { resize(); makeStars(); });
+})();
+
+/* ===== NAVIGATION ===== */
+const sectionIds = ['home','games','rules','plan','awards'];
+function go(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.ntab').forEach((t,i) => t.classList.toggle('active', sectionIds[i] === id));
+  document.querySelectorAll('.bn-item').forEach((n,i) => n.classList.toggle('active', sectionIds[i] === id));
+  if (id !== 'games') { closeArena(); closeBalloon(); }
+}
+
+/* ===== WEEK TOGGLE ===== */
+function toggleWk(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+/* ===== GAME GENERATORS ===== */
+const GAMES = {
+  friends5: {
+    title: '👫 أصدقاء الجمع مع 5',
+    time: 15,
+    gen() {
+      const rules = [
+        {t:'❓ + 1 = 5', h:'صديق 4 مع 5', a:4},
+        {t:'❓ + 2 = 5', h:'صديق 3 مع 5', a:3},
+        {t:'❓ + 3 = 5', h:'صديق 2 مع 5', a:2},
+        {t:'❓ + 4 = 5', h:'صديق 1 مع 5', a:1},
+        {t:'4 + ❓ = 5', h:'ما الذي ينقص 4 لـ5؟', a:1},
+        {t:'3 + ❓ = 5', h:'ما الذي ينقص 3 لـ5؟', a:2},
+        {t:'2 + ❓ = 5', h:'ما الذي ينقص 2 لـ5؟', a:3},
+        {t:'1 + ❓ = 5', h:'ما الذي ينقص 1 لـ5؟', a:4},
+        {t:'+4 = +5 − ❓', h:'أكمل: +4 = +5 − ...', a:1},
+        {t:'+3 = +5 − ❓', h:'أكمل: +3 = +5 − ...', a:2},
+        {t:'+2 = +5 − ❓', h:'أكمل: +2 = +5 − ...', a:3},
+        {t:'+1 = +5 − ❓', h:'أكمل: +1 = +5 − ...', a:4},
+        {t:'−4 = −5 + ❓', h:'أكمل: −4 = −5 + ...', a:1},
+        {t:'−3 = −5 + ❓', h:'أكمل: −3 = −5 + ...', a:2},
+        {t:'−2 = −5 + ❓', h:'أكمل: −2 = −5 + ...', a:3},
+        {t:'−1 = −5 + ❓', h:'أكمل: −1 = −5 + ...', a:4},
+      ];
+      const r = rules[Math.floor(Math.random() * rules.length)];
+      return { text: r.t, hint: r.h, ans: r.a };
+    }
+  },
+
+  friends10: {
+    title: '🔟 أصدقاء الجمع مع 10',
+    time: 15,
+    gen() {
+      const rules = [
+        {t:'❓ + 1 = 10', h:'صديق 9 مع 10', a:9},
+        {t:'❓ + 2 = 10', h:'صديق 8 مع 10', a:8},
+        {t:'❓ + 3 = 10', h:'صديق 7 مع 10', a:7},
+        {t:'❓ + 4 = 10', h:'صديق 6 مع 10', a:6},
+        {t:'9 + ❓ = 10', h:'ما الذي ينقص 9 لـ10؟', a:1},
+        {t:'8 + ❓ = 10', h:'ما الذي ينقص 8 لـ10؟', a:2},
+        {t:'7 + ❓ = 10', h:'ما الذي ينقص 7 لـ10؟', a:3},
+        {t:'6 + ❓ = 10', h:'ما الذي ينقص 6 لـ10؟', a:4},
+        {t:'+9 = +10 − ❓', h:'أكمل: +9 = +10 − ...', a:1},
+        {t:'+8 = +10 − ❓', h:'أكمل: +8 = +10 − ...', a:2},
+        {t:'+7 = +10 − ❓', h:'أكمل: +7 = +10 − ...', a:3},
+        {t:'+6 = +10 − ❓', h:'أكمل: +6 = +10 − ...', a:4},
+        {t:'−9 = −10 + ❓', h:'أكمل: −9 = −10 + ...', a:1},
+        {t:'−8 = −10 + ❓', h:'أكمل: −8 = −10 + ...', a:2},
+        {t:'−7 = −10 + ❓', h:'أكمل: −7 = −10 + ...', a:3},
+        {t:'−6 = −10 + ❓', h:'أكمل: −6 = −10 + ...', a:4},
+      ];
+      const r = rules[Math.floor(Math.random() * rules.length)];
+      return { text: r.t, hint: r.h, ans: r.a };
+    }
+  },
+
+  speed: {
+    title: '⚡ سرعة البرق',
+    time: 8,
+    gen() {
+      const type = Math.random() < 0.5 ? 5 : 10;
+      const pairs = type === 5
+        ? [[4,1],[3,2],[2,3],[1,4]]
+        : [[9,1],[8,2],[7,3],[6,4]];
+      const [a, b] = pairs[Math.floor(Math.random() * pairs.length)];
+      const addOrSub = Math.random() < 0.5;
+      if (addOrSub) {
+        return { text: `${a} + ❓`, hint: `صديق ${a} مع ${type}`, ans: b };
+      } else {
+        return { text: `${type} − ${a} = ❓`, hint: `اطرح ${a} من ${type}`, ans: b };
+      }
+    }
+  },
+
+  missing: {
+    title: '❓ الرقم المختفي',
+    time: 12,
+    gen() {
+      const qs = [
+        {t:'5 − ❓ = 1', h:'اطرح ماذا من 5 لتحصل على 1؟', a:4},
+        {t:'5 − ❓ = 2', h:'اطرح ماذا من 5 لتحصل على 2؟', a:3},
+        {t:'5 − ❓ = 3', h:'اطرح ماذا من 5 لتحصل على 3؟', a:2},
+        {t:'5 − ❓ = 4', h:'اطرح ماذا من 5 لتحصل على 4؟', a:1},
+        {t:'10 − ❓ = 1', h:'اطرح ماذا من 10 لتحصل على 1؟', a:9},
+        {t:'10 − ❓ = 2', h:'اطرح ماذا من 10 لتحصل على 2؟', a:8},
+        {t:'10 − ❓ = 3', h:'اطرح ماذا من 10 لتحصل على 3؟', a:7},
+        {t:'10 − ❓ = 4', h:'اطرح ماذا من 10 لتحصل على 4؟', a:6},
+        {t:'❓ − 1 = 4', h:'أي رقم إذا طرحنا منه 1 يعطي 4؟', a:5},
+        {t:'❓ − 1 = 9', h:'أي رقم إذا طرحنا منه 1 يعطي 9؟', a:10},
+        {t:'❓ + 4 = 5', h:'أكمل: ❓ + 4 = 5', a:1},
+        {t:'❓ + 3 = 10', h:'أكمل: ❓ + 3 = 10', a:7},
+      ];
+      const r = qs[Math.floor(Math.random() * qs.length)];
+      return { text: r.t, hint: r.h, ans: r.a };
+    }
+  },
+
+  match: {
+    title: '🔗 مطابقة القاعدة',
+    time: 12,
+    gen() {
+      const rules = [
+        {t:'+4 = +5 − ❓', h:'أكمل القاعدة السحرية', a:1},
+        {t:'+3 = +5 − ❓', h:'أكمل القاعدة السحرية', a:2},
+        {t:'+2 = +5 − ❓', h:'أكمل القاعدة السحرية', a:3},
+        {t:'+1 = +5 − ❓', h:'أكمل القاعدة السحرية', a:4},
+        {t:'−4 = −5 + ❓', h:'أكمل قاعدة الطرح', a:1},
+        {t:'−3 = −5 + ❓', h:'أكمل قاعدة الطرح', a:2},
+        {t:'+9 = +10 − ❓', h:'أكمل القاعدة السحرية', a:1},
+        {t:'+8 = +10 − ❓', h:'أكمل القاعدة السحرية', a:2},
+        {t:'+7 = +10 − ❓', h:'أكمل القاعدة السحرية', a:3},
+        {t:'+6 = +10 − ❓', h:'أكمل القاعدة السحرية', a:4},
+        {t:'−9 = −10 + ❓', h:'أكمل قاعدة الطرح', a:1},
+        {t:'−6 = −10 + ❓', h:'أكمل قاعدة الطرح', a:4},
+      ];
+      const r = rules[Math.floor(Math.random() * rules.length)];
+      return { text: r.t, hint: r.h, ans: r.a };
+    }
+  }
+};
+
+/* ===== START GAME ===== */
+function startGame(type) {
+  // Resume AudioContext on first interaction
+  try { if (window.AudioContext || window.webkitAudioContext) { const tmp = new (window.AudioContext||window.webkitAudioContext)(); tmp.close(); } } catch(e){}
+
+  if (type === 'balloon') {
+    startBalloonGame();
+    return;
+  }
+
+  currGame = type;
+  gameScore = 0;
+  gameQ = 0;
+  const cfg = GAMES[type];
+
+  document.getElementById('arenaName').textContent = cfg.title;
+  document.getElementById('aScore').textContent = '0';
+  document.getElementById('aQ').textContent = '0/' + totalQ;
+  document.getElementById('progFill').style.width = '0%';
+
+  const arena = document.getElementById('arena');
+  arena.classList.add('active');
+  setTimeout(() => arena.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+
+  gamesPlayed.add(type);
+  nextQ();
+}
+
+function closeArena() {
+  clearQTimer();
+  document.getElementById('arena').classList.remove('active');
+  currGame = '';
+}
+
+function nextQ() {
+  if (gameQ >= totalQ) { endGame(); return; }
+  gameQ++;
+  clearQTimer();
+  const cfg = GAMES[currGame];
+  const q = cfg.gen();
+  currAns = q.ans;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('qHint').textContent = '✦ ' + q.hint;
+  document.getElementById('aQ').textContent = gameQ + '/' + totalQ;
+  document.getElementById('progFill').style.width = (gameQ / totalQ * 100) + '%';
+  hideFeedback();
+  renderAnswers(q.ans);
+  startQTimer(cfg.time || 15);
+}
+
+function renderAnswers(correct) {
+  const wrap = document.getElementById('answersWrap');
+  wrap.innerHTML = '';
+  const opts = new Set([correct]);
+  let tries = 0;
+  while (opts.size < 4 && tries < 80) {
+    // Generate plausible wrong answers (1–10 range)
+    const delta = Math.floor(Math.random() * 4) + 1;
+    const w = Math.random() < 0.5 ? correct + delta : Math.max(1, correct - delta);
+    if (w !== correct && w >= 0 && w <= 12) opts.add(w);
+    tries++;
+  }
+  // Fallback: add generic distractors if needed
+  const fallbacks = [1,2,3,4,5,6,7,8,9,10].filter(n => !opts.has(n));
+  while (opts.size < 4 && fallbacks.length) {
+    opts.add(fallbacks.splice(Math.floor(Math.random()*fallbacks.length),1)[0]);
+  }
+
+  [...opts].sort(() => Math.random() - .5).forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.textContent = opt;
+    btn.setAttribute('type', 'button');
+    btn.onclick = () => checkAns(opt, btn);
+    wrap.appendChild(btn);
+  });
+}
+
+function checkAns(val, btn) {
+  clearQTimer();
+  document.querySelectorAll('.ans-btn').forEach(b => b.onclick = null);
+  const ok = val === currAns;
+  if (ok) {
+    btn.classList.add('correct');
+    gameScore += 10;
+    totalStars++;
+    correctToday++;
+    Audio.correct();
+    spawnParticles(btn, true);
+    document.getElementById('aScore').textContent = gameScore;
+    document.getElementById('hStars').textContent = totalStars;
+    document.getElementById('hLevel').textContent = Math.floor(totalStars / 10) + 1;
+    document.getElementById('hCorrect').textContent = correctToday;
+    updateStars(); updateAchs();
+    showFeedback(true);
+  } else {
+    btn.classList.add('wrong');
+    Audio.wrong();
+    document.querySelectorAll('.ans-btn').forEach(b => {
+      if (+b.textContent === currAns) b.classList.add('correct');
+    });
+    showFeedback(false);
+  }
+  setTimeout(nextQ, 1500);
+}
+
+function showFeedback(ok) {
+  const bar = document.getElementById('feedbackBar');
+  bar.textContent = ok ? '✦ ممتاز! إجابة صحيحة! 🎉' : `✦ الإجابة الصحيحة: ${currAns}`;
+  bar.className = 'feedback-bar show ' + (ok ? 'fb-correct' : 'fb-wrong');
+}
+function hideFeedback() {
+  document.getElementById('feedbackBar').className = 'feedback-bar';
+}
+
+/* ===== QUESTION TIMER ===== */
+const CIRCUM = 138.2;
+function startQTimer(secs) {
+  questionSec = secs;
+  const arc = document.getElementById('timerArc');
+  const num = document.getElementById('timerNum');
+
+  const update = () => {
+    const ratio = questionSec / secs;
+    arc.style.strokeDashoffset = CIRCUM * (1 - ratio);
+    const urgent = questionSec <= 5;
+    arc.style.stroke = urgent ? 'var(--rose)' : 'var(--teal)';
+    num.textContent = questionSec;
+    num.style.color = urgent ? 'var(--rose)' : 'var(--teal)';
+  };
+  update();
+
+  questionTimer = setInterval(() => {
+    questionSec--;
+    update();
+    if (questionSec <= 5 && questionSec > 0) Audio.urgentTick();
+    if (questionSec <= 0) {
+      clearQTimer();
+      Audio.wrong();
+      document.querySelectorAll('.ans-btn').forEach(b => b.onclick = null);
+      document.querySelectorAll('.ans-btn').forEach(b => {
+        if (+b.textContent === currAns) b.classList.add('correct');
+      });
+      showFeedback(false);
+      setTimeout(nextQ, 1500);
+    }
+  }, 1000);
+}
+function clearQTimer() {
+  clearInterval(questionTimer);
+  questionTimer = null;
+}
+
+/* ===== END GAME ===== */
+function endGame() {
+  const pct = gameScore / (totalQ * 10);
+  const emoji = pct >= .8 ? '🏆' : pct >= .5 ? '⭐' : '👍';
+  const title = pct >= .8 ? 'ممتاز! أنت بطل!' : pct >= .5 ? 'جيد جداً! استمر!' : 'حاول مجدداً!';
+  const stars = pct >= .8 ? '⭐⭐⭐' : pct >= .5 ? '⭐⭐' : '⭐';
+  document.getElementById('popEmoji').textContent = emoji;
+  document.getElementById('popTitle').textContent = title;
+  document.getElementById('popStars').textContent = stars;
+  document.getElementById('popScore').textContent = `حصلت على ${gameScore} نقطة من ${totalQ*10}`;
+  document.getElementById('overlay').classList.add('show');
+  if (pct >= .8) Audio.victory();
+  if (gamesPlayed.size >= 6) document.getElementById('ach6').classList.add('earned');
+}
+function closePopup() {
+  document.getElementById('overlay').classList.remove('show');
+  closeArena();
+  closeBalloon();
+}
+
+/* ===== BALLOON GAME ===== */
+const BALLOON_EMOJIS = ['🔴','🟡','🟢','🔵','🟣','🟠','🩷','🩵'];
+const BALLOON_QUESTIONS = () => {
+  const all = [
+    ...GAMES.friends5.gen ? [] : [],
+    ...[...Array(16)].map(() => GAMES.friends5.gen()),
+    ...[...Array(16)].map(() => GAMES.friends10.gen()),
+    ...[...Array(8)].map(() => GAMES.missing.gen()),
+  ];
+  // Build fresh set of questions
+  const qs = [];
+  for (let i = 0; i < 10; i++) {
+    const src = Math.random() < 0.5 ? GAMES.friends5 : GAMES.friends10;
+    qs.push(src.gen());
+  }
+  return qs;
+};
+
+let bQuestions = [];
+let bCurrentQ = null;
+
+function startBalloonGame() {
+  balloonScore = 0;
+  balloonQ = 0;
+  bQuestions = BALLOON_QUESTIONS();
+  document.getElementById('bScore').textContent = '0';
+  document.getElementById('bQ').textContent = '0/' + totalQ;
+  document.getElementById('bProgFill').style.width = '0%';
+  document.getElementById('balloonArena').classList.add('active');
+  document.getElementById('arena').classList.remove('active');
+  setTimeout(() => document.getElementById('balloonArena').scrollIntoView({behavior:'smooth',block:'start'}), 100);
+  gamesPlayed.add('balloon');
+  nextBalloon();
+}
+
+function closeBalloon() {
+  balloonAnimations.forEach(id => cancelAnimationFrame(id));
+  balloonAnimations = [];
+  clearInterval(balloonInterval);
+  balloonInterval = null;
+  document.getElementById('balloonArena').classList.remove('active');
+  const field = document.getElementById('balloonField');
+  // Remove all balloons
+  field.querySelectorAll('.balloon').forEach(b => b.remove());
+}
+
+function nextBalloon() {
+  if (balloonQ >= totalQ) { endBalloonGame(); return; }
+
+  const q = bQuestions[balloonQ];
+  balloonQ++;
+  balloonAns = q.ans;
+
+  document.getElementById('balloonQ').textContent = q.text;
+  document.getElementById('bQ').textContent = balloonQ + '/' + totalQ;
+  document.getElementById('bProgFill').style.width = (balloonQ / totalQ * 100) + '%';
+
+  // Clear old balloons
+  const field = document.getElementById('balloonField');
+  field.querySelectorAll('.balloon').forEach(b => b.remove());
+
+  // Generate 4 answer options
+  const opts = new Set([q.ans]);
+  const fallbacks = [1,2,3,4,5,6,7,8,9,10].filter(n => !opts.has(n));
+  while (opts.size < 4 && fallbacks.length) {
+    const idx = Math.floor(Math.random() * fallbacks.length);
+    opts.add(fallbacks.splice(idx, 1)[0]);
+  }
+  const answers = [...opts].sort(() => Math.random() - 0.5);
+
+  // Spawn balloons at staggered positions
+  const fieldW = field.offsetWidth;
+  answers.forEach((ans, i) => {
+    const balloon = document.createElement('div');
+    balloon.className = 'balloon';
+    balloon.textContent = BALLOON_EMOJIS[i % BALLOON_EMOJIS.length];
+    balloon.setAttribute('data-ans', ans);
+
+    // Position & speed
+    const speed = 5 + Math.random() * 4; // seconds
+    const left = 10 + (i * 20) + Math.random() * 10;
+    balloon.style.left = `${left}%`;
+    balloon.style.animationDuration = `${speed}s`;
+    balloon.style.animationDelay = `${Math.random() * 1.5}s`;
+    balloon.style.fontSize = '2.8rem';
+    balloon.style.filter = 'drop-shadow(0 0 10px rgba(255,255,255,.3))';
+
+    // Label
+    const label = document.createElement('div');
+    label.textContent = ans;
+    label.style.cssText = 'font-family:Orbitron,sans-serif;font-size:.9rem;font-weight:700;color:#fff;text-align:center;text-shadow:0 0 8px rgba(0,0,0,.8);margin-top:-4px;';
+    balloon.appendChild(label);
+
+    balloon.onclick = (e) => {
+      checkBalloon(parseInt(balloon.getAttribute('data-ans')), balloon, e);
+    };
+
+    field.appendChild(balloon);
+
+    // Remove balloon if it flies off-screen
+    balloon.addEventListener('animationend', () => {
+      if (parseInt(balloon.getAttribute('data-ans')) === balloonAns) {
+        // Correct balloon escaped — mark wrong
+        Audio.wrong();
+        showBFeedback(false, balloonAns);
+        field.querySelectorAll('.balloon').forEach(b => b.remove());
+        setTimeout(nextBalloon, 1200);
+      } else {
+        balloon.remove();
+      }
+    });
+  });
+}
+
+function checkBalloon(val, el, e) {
+  const ok = val === balloonAns;
+  // Prevent re-tapping
+  document.getElementById('balloonField').querySelectorAll('.balloon').forEach(b => b.onclick = null);
+
+  if (ok) {
+    Audio.correct();
+    balloonScore += 10;
+    totalStars++;
+    correctToday++;
+    document.getElementById('bScore').textContent = balloonScore;
+    document.getElementById('hStars').textContent = totalStars;
+    document.getElementById('hLevel').textContent = Math.floor(totalStars / 10) + 1;
+    document.getElementById('hCorrect').textContent = correctToday;
+    updateStars(); updateAchs();
+    // Pop animation
+    el.style.transition = 'transform .2s,opacity .2s';
+    el.style.transform = 'scale(2)';
+    el.style.opacity = '0';
+    spawnParticlesAt(e.clientX, e.clientY, true);
+    showBFeedback(true, val);
+  } else {
+    Audio.wrong();
+    el.style.filter = 'grayscale(1) brightness(.5)';
+    showBFeedback(false, balloonAns);
+  }
+
+  setTimeout(() => {
+    document.getElementById('balloonField').querySelectorAll('.balloon').forEach(b => b.remove());
+    nextBalloon();
+  }, 1200);
+}
+
+function showBFeedback(ok, ans) {
+  const bar = document.getElementById('bFeedbackBar');
+  bar.textContent = ok ? '✦ ممتاز! بالونة صحيحة! 🎈' : `✦ الإجابة الصحيحة: ${ans}`;
+  bar.className = 'feedback-bar show ' + (ok ? 'fb-correct' : 'fb-wrong');
+  setTimeout(() => bar.className = 'feedback-bar', 1100);
+}
+
+function endBalloonGame() {
+  const pct = balloonScore / (totalQ * 10);
+  const emoji = pct >= .8 ? '🏆' : pct >= .5 ? '⭐' : '👍';
+  const title = pct >= .8 ? 'بطل البالونات!' : pct >= .5 ? 'جيد جداً!' : 'حاول مجدداً!';
+  const stars = pct >= .8 ? '⭐⭐⭐' : pct >= .5 ? '⭐⭐' : '⭐';
+  document.getElementById('popEmoji').textContent = emoji;
+  document.getElementById('popTitle').textContent = title;
+  document.getElementById('popStars').textContent = stars;
+  document.getElementById('popScore').textContent = `حصلت على ${balloonScore} نقطة من ${totalQ*10}`;
+  document.getElementById('overlay').classList.add('show');
+  if (pct >= .8) Audio.victory();
+}
+
+/* ===== PARTICLE EFFECTS ===== */
+function spawnParticles(btn, ok) {
+  const rect = btn.getBoundingClientRect();
+  spawnParticlesAt(rect.left + rect.width/2, rect.top + rect.height/2, ok);
+}
+
+function spawnParticlesAt(x, y, ok) {
+  const colors = ok
+    ? ['#00e676','#ffd23f','#b87fff','#00f5d4']
+    : ['#ff4d7d','#ff8c00'];
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = (i / 12) * Math.PI * 2;
+    const dist = 50 + Math.random() * 60;
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[i % colors.length];
+    p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
+}
+
+/* ===== STARS & ACHIEVEMENTS ===== */
+function updateStars() {
+  const s = Math.min(totalStars, 5);
+  document.getElementById('starsRow').textContent = '⭐'.repeat(s) + '☆'.repeat(5 - s);
+  document.getElementById('starsCount').textContent = totalStars + ' نجمة';
+}
+function updateAchs() {
+  if (totalStars >= 1)   document.getElementById('ach1').classList.add('earned');
+  if (totalStars >= 10)  document.getElementById('ach2').classList.add('earned');
+  if (totalStars >= 25)  document.getElementById('ach3').classList.add('earned');
+  if (totalStars >= 50)  document.getElementById('ach4').classList.add('earned');
+  if (totalStars >= 100) document.getElementById('ach5').classList.add('earned');
+}
+
+/* ===== PLAN TIMER ===== */
+function startPlanTimer(btn, minutes, label) {
+  if (planTimerInterval) stopPlanTimer();
+  planTimerLabel = label;
+  planTimerSec = minutes * 60;
+  planActiveBtn = btn;
+  btn.classList.add('running');
+  btn.innerHTML = '⏸ جارٍ';
+  document.getElementById('floatTimer').classList.add('visible');
+  document.getElementById('ftLabel').textContent = label;
+  document.getElementById('ftIcon').textContent = getStepIcon(label);
+  updatePlanDisplay();
+
+  planTimerInterval = setInterval(() => {
+    planTimerSec--;
+    updatePlanDisplay();
+    if (planTimerSec <= 30 && planTimerSec > 0 && planTimerSec % 10 === 0) {
+      Audio.urgentTick();
+    }
+    if (planTimerSec <= 0) donePlanTimer();
+  }, 1000);
+}
+
+function updatePlanDisplay() {
+  const m = Math.floor(planTimerSec / 60);
+  const s = planTimerSec % 60;
+  const str = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const el = document.getElementById('ftTime');
+  el.textContent = str;
+  el.className = 'ft-time' + (planTimerSec <= 30 ? ' urgent' : '');
+}
+
+function donePlanTimer() {
+  clearInterval(planTimerInterval);
+  planTimerInterval = null;
+  Audio.alarm(); // صوت المنبه الحقيقي!
+  if (navigator.vibrate) navigator.vibrate([300,100,300,100,300,100,500]);
+  if (planActiveBtn) {
+    planActiveBtn.classList.remove('running');
+    planActiveBtn.classList.add('done');
+    planActiveBtn.innerHTML = '✓ انتهى';
+    planActiveBtn = null;
+  }
+  document.getElementById('ftTime').textContent = '✓ انتهت!';
+  document.getElementById('ftTime').className = 'ft-time';
+  setTimeout(() => document.getElementById('floatTimer').classList.remove('visible'), 4000);
+}
+
+function stopPlanTimer() {
+  clearInterval(planTimerInterval);
+  planTimerInterval = null;
+  if (planActiveBtn) {
+    planActiveBtn.classList.remove('running');
+    planActiveBtn.innerHTML = '⏱ ابدأ';
+    planActiveBtn = null;
+  }
+  document.getElementById('floatTimer').classList.remove('visible');
+}
+
+function getStepIcon(label) {
+  if (label.includes('أغنية') || label.includes('ترديد')) return '🎵';
+  if (label.includes('تمارين') || label.includes('تمارين')) return '📝';
+  if (label.includes('لعبة') || label.includes('بطولة')) return '🎮';
+  if (label.includes('جائزة') || label.includes('شارة') || label.includes('بطل') || label.includes('نجوم')) return '⭐';
+  if (label.includes('تحفيز') || label.includes('تقييم')) return '🌟';
+  if (label.includes('قصة') || label.includes('شرح')) return '📖';
+  return '⏱';
+}
+
+/* Initial ach1 is NOT earned until first game played */
+</script>
 </body>
 </html>
