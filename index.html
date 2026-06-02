@@ -1657,6 +1657,111 @@ function getStepIcon(label) {
 }
 
 /* Initial ach1 is NOT earned until first game played */
-</script>
+  </script>
+  <script>
+class MathAI {
+  constructor() {
+    this.level = 1;
+    this.correctStreak = 0;
+  }
+
+  // توليد سؤال حسب المستوى
+  generateQuestion() {
+    const max = this.level * 10;
+
+    const a = this.rand(1, max);
+    const b = this.rand(1, max);
+
+    const op = this.randomOp();
+
+    let question, answer;
+
+    if (op === "+") {
+      question = `${a} + ${b}`;
+      answer = a + b;
+    }
+
+    if (op === "-") {
+      question = `${a} - ${b}`;
+      answer = a - b;
+    }
+
+    if (op === "×") {
+      question = `${a} × ${b}`;
+      answer = a * b;
+    }
+
+    return { question, answer };
+  }
+
+  randomOp() {
+    const ops = ["+", "-", "×"];
+    return ops[Math.floor(Math.random() * ops.length)];
+  }
+
+  rand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // تقييم إجابة اللاعب وتطوير المستوى
+  checkAnswer(userAnswer, correctAnswer) {
+    if (Number(userAnswer) === Number(correctAnswer)) {
+      this.correctStreak++;
+
+      if (this.correctStreak % 3 === 0) {
+        this.level++; // يزيد الصعوبة
+      }
+
+      return { correct: true, level: this.level };
+    } else {
+      this.correctStreak = 0;
+      if (this.level > 1) this.level--;
+      return { correct: false, level: this.level };
+    }
+  }
+
+  // “تعليق ذكي” بسيط
+  feedback(isCorrect) {
+    if (isCorrect) {
+      const msgs = [
+        "إجابة صحيحة",
+        "مستوى جيد",
+        "استمر"
+      ];
+      return msgs[Math.floor(Math.random() * msgs.length)];
+    } else {
+      const msgs = [
+        "خطأ، راجع الحساب",
+        "ركز أكثر",
+        "حاول مرة ثانية"
+      ];
+      return msgs[Math.floor(Math.random() * msgs.length)];
+    }
+  }
+}
+
+const AI = new MathAI();
+
+// مثال ربط مع واجهتك
+let current = AI.generateQuestion();
+
+function showQuestion() {
+  document.querySelector(".q-text").innerText = current.question;
+}
+
+// عند الضغط على جواب
+function submitAnswer(val) {
+  const result = AI.checkAnswer(val, current.answer);
+
+  const msg = AI.feedback(result.correct);
+
+  alert(msg + " | المستوى: " + result.level);
+
+  current = AI.generateQuestion();
+  showQuestion();
+}
+
+showQuestion();
+    </script>
 </body>
 </html>
